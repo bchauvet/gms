@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { api, type Class } from 'src/services/blizzardApi';
+import { BnetApi, type Class } from 'src/services/';
 import { ref, computed } from 'vue';
 
 export const useCharStore = defineStore('character', () => {
@@ -12,11 +12,11 @@ export const useCharStore = defineStore('character', () => {
 
   const initStore = async () => {
     if (initialized.value) return;
-    await api.class
+    await BnetApi.class
       .list()
       .then((resp) =>
         resp.data.classes.forEach((cls: Class) =>
-          api.class
+          BnetApi.class
             .get_icon(cls.id)
             .then((icon) => classes.value.push({ id: cls.id, name: cls.name, icon: icon })),
         ),

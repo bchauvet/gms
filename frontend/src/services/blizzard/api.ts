@@ -1,27 +1,8 @@
-import axios, { type AxiosStatic } from 'axios';
-import type { InternalAxiosRequestConfig } from 'axios';
+import axios, { type AxiosStatic, type InternalAxiosRequestConfig } from 'axios';
+import { useAuthStore } from 'stores/auth';
 
-const getToken = async () => {
-  await axios
-    .post(
-      'https://oauth.battle.net/token',
-      {
-        grant_type: 'client_credentials',
-      },
-      {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        auth: {
-          username: process.env.BLIZZARD_CLIENT_ID!,
-          password: process.env.BLIZZARD_CLIENT_SECRET!,
-        },
-      },
-    )
-    .then((resp) => {
-      localStorage.setItem('authToken', resp.data.access_token);
-    });
-};
+const authStore = useAuthStore();
+
 const HTTP = axios.create({
   timeout: 60000,
   headers: {
@@ -30,7 +11,7 @@ const HTTP = axios.create({
 }) as AxiosStatic;
 
 const authInterceptor = (config: InternalAxiosRequestConfig) => {
-  if (localStorage.authToken) config.headers.Authorization = `Bearer ${localStorage.authToken}`;
+  if (authStore.BnetProfile) config.headers.Authorization = `Bearer ${authStore.BnetProfile.access_token}`;
   else config.withCredentials = false;
   return config;
 };
@@ -51,7 +32,16 @@ const pd = HTTP.create({
     locale: 'en_GB',
   },
 });
-gd.interceptors.request.use(authInterceptor);
+pd.interceptors.request.use(authInterceptor);
+
+const ud = HTTP.create({
+  baseURL: 'https://eu.api.blizzard.com/profile/user/wow',
+  params: {
+    namespace: 'profile-classic-eu',
+    locale: 'en_GB',
+  },
+});
+ud.interceptors.request.use(authInterceptor);
 
 export declare interface Class {
   id: number;
@@ -59,7 +49,25 @@ export declare interface Class {
   icon?: string;
 }
 
+export declare interface Character {
+  id: number;
+  name: string;
+  level: number;
+  playable_class: {
+    id: number;
+  };
+  playable_race: {
+    id: number;
+  };
+}
+
+export declare interface Member {
+  rank: number;
+  character: Character;
+}
+
 const api = {
+  user: () => ud.get(''),
   class: {
     get_icon: (id: number) =>
       gd.get(`media/playable-class/${id}`).then((resp) => resp.data.assets[0].value),
@@ -77,4 +85,4 @@ const api = {
   },
 };
 
-export { api, HTTP, getToken };
+export default api;
