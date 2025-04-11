@@ -1,23 +1,20 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+    <q-header>
       <q-toolbar>
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
-
-        <q-toolbar-title> Quasar App </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
+        <q-toolbar-title>Guild Management</q-toolbar-title>
+        <div>
+          <q-btn
+            flat
+            v-if="authStore.BnetUserInfo"
+            :icon="BnetIcon"
+            :label="authStore.BnetUserInfo.battletag"
+          />
+        </div>
       </q-toolbar>
     </q-header>
-
-    <q-drawer v-model="leftDrawerOpen" bordered>
-      <q-list>
-        <q-item-label header> Essential Links </q-item-label>
-
-        <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
-      </q-list>
-    </q-drawer>
-
+    <q-drawer v-model="leftDrawerOpen" bordered> </q-drawer>
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -26,17 +23,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import EssentialLink, { type EssentialLinkProps } from 'components/EssentialLink.vue';
+import { useAuthStore } from 'stores/auth';
+import { BnetIcon } from 'src/services';
 
-const linksList: EssentialLinkProps[] = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev',
-  },
-];
-
+const authStore = useAuthStore();
 const leftDrawerOpen = ref(false);
 
 function toggleLeftDrawer() {

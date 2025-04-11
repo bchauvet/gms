@@ -1,6 +1,4 @@
 <template>
-  <pre v-if="BnetProfile">{{ BnetProfile }}</pre>
-  <q-btn v-else label="Login" :icon="BnetIcon" @click="BnetAuth.signinRedirect()" />
   <q-page class="row items-center justify-evenly">
     <q-card flat v-if="guildStore.guild">
       <q-card-section class="text-center">
@@ -35,20 +33,15 @@
 import { onMounted } from 'vue';
 import { useCharStore } from 'stores/class';
 import { useGuildStore } from 'stores/guild';
-import { BnetApi, BnetAuth, BnetIcon } from 'src/services';
 import { useAuthStore } from 'stores/auth';
-import { storeToRefs } from 'pinia';
-
-const authStore = useAuthStore();
-const { BnetProfile } = storeToRefs(authStore);
 
 const charStore = useCharStore();
 const guildStore = useGuildStore();
+const authStore = useAuthStore();
 
 onMounted(async () => {
   await charStore.initStore();
   await guildStore.initStore();
-  await BnetApi.class.list();
-  await BnetApi.user();
+  await authStore.initStore();
 });
 </script>

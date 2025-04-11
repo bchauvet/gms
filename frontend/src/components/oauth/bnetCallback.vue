@@ -8,11 +8,10 @@ const authStore = useAuthStore();
 const router = useRouter();
 
 onMounted(async () => {
-  let user = authStore.BnetProfile;
-  if (!user) {
-    user = (await BnetAuth.signinRedirectCallback()) || null;
+  if (!authStore.BnetToken) {
+    const user = (await BnetAuth.signinRedirectCallback()) || null;
+    authStore.$patch({ BnetToken: user.access_token });
   }
-  authStore.BnetProfile = user;
   await router.push('/');
 });
 </script>
