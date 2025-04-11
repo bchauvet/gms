@@ -1,5 +1,6 @@
 import axios, { type AxiosStatic, type InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from 'stores/auth';
+import type { Item, EquippedItem, SearchResult, Media } from './models';
 
 const HTTP = axios.create({
   timeout: 60000,
@@ -10,6 +11,7 @@ const HTTP = axios.create({
 
 const authInterceptor = (config: InternalAxiosRequestConfig) => {
   const authStore = useAuthStore();
+  if (config.url) config.url = config.url.toLowerCase();
   if (authStore.BnetToken) config.headers.Authorization = `Bearer ${authStore.BnetToken}`;
   else config.withCredentials = false;
   return config;
@@ -69,6 +71,22 @@ const api = {
   },
   character: {
     get: (realm: string, name: string) => pd.get(`character/${realm}/${name}`),
+    getEquipment: (realm: string, name: string) =>
+      pd
+        .get(`character/${realm}/${name}/equipment`)
+        .then<EquippedItem[]>((resp) => resp.data.equipped_items),
+  },
+  item: {
+    search: (ids: number[]) =>
+      gd
+        .get('search/item?id=' + ids.join('||'))
+        .then<Item[]>((resp) => resp.data.results.map((i: SearchResult<Item>) => i.data)),
+  },
+  media: {
+    search: (tags: string, ids: number[]) =>
+      gd
+        .get(`search/media?_pageSize=1000&tags=${tags}&id=${ids.join('||')}`)
+        .then<Media[]>((resp) => resp.data.results.map((i: SearchResult<Media>) => i.data)),
   },
 };
 

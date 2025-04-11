@@ -7,6 +7,16 @@ export declare interface BnetUser {
   battletag: string;
 }
 
+export declare interface Media {
+  id: number;
+  assets?: [
+    {
+      key: string;
+      value: string;
+    },
+  ];
+}
+
 export declare interface Class {
   id: number;
   name: string;
@@ -17,15 +27,90 @@ export declare interface Character {
   id: number;
   name: string;
   level: number;
+  realm: {
+    name: string;
+    slug: string;
+  };
+  character_class?: Class;
   playable_class: {
     id: number;
   };
   playable_race: {
     id: number;
   };
+  equipped_items: EquippedItem[];
+  average_item_level?: number;
 }
 
 export declare interface Member {
   rank: number;
   character: Character;
+}
+
+export declare interface Enchantment {
+  enchantment_id: number;
+  enchantment_slot: {
+    id: number;
+    type?: string;
+  };
+  source_item?: {
+    id: number;
+    name: string;
+  };
+}
+
+export declare interface Stat {
+  type: {
+    type: string;
+    name: string;
+  };
+  value: number;
+}
+
+export declare interface Item {
+  id: number;
+  name?: string;
+  level?: number;
+  media: {
+    id: number;
+    assets?: [{ value: string }];
+  };
+}
+
+export declare interface EquippedItem {
+  item: Item;
+  name: string;
+  media: Media;
+  item_class: {
+    id: number;
+    name: string;
+  };
+  slot: {
+    type: string;
+    name: string;
+  };
+  binding: {
+    type: string;
+    name: string;
+  };
+  armor: {
+    value: number;
+  };
+  quality: {
+    type: string;
+    name: string;
+  };
+  enchantments: Enchantment[];
+  stats: Stat[];
+  set?: {
+    display_string: string;
+    items: [{
+      item: Item;
+      is_equipped: boolean;
+    }]
+  };
+}
+
+export declare interface SearchResult<T> {
+  data: T;
 }

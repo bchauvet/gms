@@ -33,15 +33,11 @@
 import { onMounted } from 'vue';
 import { useCharStore } from 'stores/class';
 import { useGuildStore } from 'stores/guild';
-import { useAuthStore } from 'stores/auth';
 
 const charStore = useCharStore();
 const guildStore = useGuildStore();
-const authStore = useAuthStore();
 
 onMounted(async () => {
-  await charStore.initStore();
   await guildStore.initStore();
-  await authStore.initStore();
 });
 </script>

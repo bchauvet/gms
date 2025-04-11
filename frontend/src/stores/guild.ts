@@ -23,6 +23,7 @@ export const useGuildStore = defineStore('guild', () => {
           'rank',
         )),
     );
+    initialized.value = true;
   };
 
   return {
