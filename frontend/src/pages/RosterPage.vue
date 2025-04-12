@@ -168,7 +168,6 @@ const colorByILVL = (ilvl: number | null) => {
             :style="'color:' + getRankColor(Math.round(c.logs.bestPerformanceAverage * 10) / 10)"
           >
             <a
-              style="text-decoration: none; color: inherit"
               target="_blank"
               :href="`https://classic.warcraftlogs.com/character/eu/sulfuron/${c.name.toLowerCase()}?size=10`"
             >
@@ -188,11 +187,16 @@ const colorByILVL = (ilvl: number | null) => {
               )
             "
           >
-            {{
-              Math.floor(
-                c.logs.rankings.find((r) => r.encounter.id === encounter.id)?.rankPercent ?? 0,
-              )
-            }}
+            <a
+              target="_blank"
+              :href="`https://classic.warcraftlogs.com/character/eu/sulfuron/${c.name.toLowerCase()}?size=10&boss=${encounter.id}`"
+            >
+              {{
+                Math.floor(
+                  c.logs.rankings.find((r) => r.encounter.id === encounter.id)?.rankPercent ?? 0,
+                )
+              }}
+            </a>
           </q-td>
         </template>
         <template v-else>
@@ -229,3 +233,10 @@ const colorByILVL = (ilvl: number | null) => {
     </tbody>
   </q-markup-table>
 </template>
+
+<style scoped>
+a {
+  text-decoration: none;
+  color: inherit;
+}
+</style>
