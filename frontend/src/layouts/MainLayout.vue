@@ -25,11 +25,11 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useAuthStore } from 'stores/auth';
-import { useCharStore } from 'stores/class';
+import { useRosterStore } from 'stores/roster';
 import { BnetIcon } from 'src/services';
 
 const authStore = useAuthStore();
-const charStore = useCharStore();
+const charStore = useRosterStore();
 const leftDrawerOpen = ref(false);
 
 function toggleLeftDrawer() {

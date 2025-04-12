@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { useAuthStore } from 'stores/auth';
-import { useCharStore } from 'stores/class';
+import { useRosterStore } from 'stores/roster';
 import { storeToRefs } from 'pinia';
-import { type Character } from 'src/services';
+import { type Character, WclApi } from 'src/services';
 import { ref } from 'vue';
 
 const authStore = useAuthStore();
-const charStore = useCharStore();
+const charStore = useRosterStore();
 const { BnetAccount } = storeToRefs(authStore);
 
 const characterDetail = ref<Character>();
 
 const onClick = async (realm: string, name: string, force = false) => {
   characterDetail.value = await charStore.getCharacter(realm, name, force);
+  await WclApi.getCharLogs(realm, name);
 };
 </script>
 

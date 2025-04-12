@@ -31,10 +31,10 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { useCharStore } from 'stores/class';
+import { useRosterStore } from 'stores/roster';
 import { useGuildStore } from 'stores/guild';
 
-const charStore = useCharStore();
+const charStore = useRosterStore();
 const guildStore = useGuildStore();
 
 onMounted(async () => {

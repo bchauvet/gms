@@ -1,11 +1,14 @@
 import { defineStore } from 'pinia';
-import { BnetApi, type Class, type Character } from 'src/services/';
-import { ref, computed } from 'vue';
+import { BnetApi, type Class, type Character, WclApi, type WclCharacter } from 'src/services/';
+import { ref, computed, watch } from 'vue';
+import { LocalStorage } from 'quasar';
+import { debounce } from 'quasar';
 
-export const useCharStore = defineStore('character', () => {
+export const useRosterStore = defineStore('roster', () => {
   const initialized = ref(false);
   const classes = ref<Class[]>([]);
-  const characters = ref<Character[]>([]);
+  const characters = ref<Character[]>(LocalStorage.getItem('roster') || []);
+  const logs = ref<WclCharacter[]>([]);
 
   const getClassIcon = computed(
     () => (class_id: number) => classes.value.find((cls) => cls.id === class_id)?.icon,
@@ -56,11 +59,31 @@ export const useCharStore = defineStore('character', () => {
     return result;
   };
 
+  const getCharacterLogs = async (realm: string, name: string, force = false) => {
+    const cache = logs.value.find((c) => c.name === name && c.server.slug === realm);
+    if (cache && !force) return cache;
+    const WclChar = await WclApi.getCharLogs(realm, name);
+    if (force) {
+      logs.value.map((c) => (c.name === name && c.server.slug === realm ? WclChar : c));
+    } else {
+      logs.value.push(WclChar);
+    }
+    return WclChar.zoneRankings;
+  };
+
+  watch(
+    () => characters.value,
+    debounce((value) => LocalStorage.set('roster', value), 1000),
+    { deep: true },
+  );
+
   return {
     characters,
+    logs,
     classes,
     getClassIcon,
     getCharacter,
+    getCharacterLogs,
     initStore,
   };
 });

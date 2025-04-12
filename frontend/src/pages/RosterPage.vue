@@ -1,14 +1,22 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { useCharStore } from 'stores/class';
+import { computed, onMounted } from 'vue';
+import { useRosterStore } from 'stores/roster';
 import { sortBy } from 'lodash';
+import {
+  slotTypes,
+  rankColors,
+  getRankColor,
+  type Character,
+  type WclCharacter,
+} from 'src/services';
 
-const charStore = useCharStore();
+const rosterStore = useRosterStore();
 
 const rNames = [
   'Masakek',
   'Darkstarky',
   'Medà',
+  'Médà',
   'Hykø',
   'Azzallée',
   'Diwood',
@@ -28,43 +36,29 @@ const rNames = [
   'Gayolas',
 ];
 
-const slotTypes = [
-  'HEAD',
-  'NECK',
-  'SHOULDER',
-  'BACK',
-  'CHEST',
-  'WRIST',
-  'HANDS',
-  'WAIST',
-  'LEGS',
-  'FEET',
-  'FINGER_1',
-  'FINGER_2',
-  'TRINKET_1',
-  'TRINKET_2',
-  'MAIN_HAND',
-  'OFF_HAND',
-  'RANGED',
-];
-
-const colors = {
-  legendary: '#ff8000',
-  astounding: '#e268a8',
-  epic: '#a335ee',
-  rare: '#0070ff',
-  uncommon: '#1eff00',
-  common: '#666',
-};
-
 onMounted(async () => {
   for (const name of rNames) {
-    await charStore.getCharacter('sulfuron', name);
+    await rosterStore.getCharacter('sulfuron', name);
+    await rosterStore.getCharacterLogs('sulfuron', name);
   }
 });
 
+declare interface CharacterWithLogs extends Character {
+  logs?: WclCharacter['zoneRankings'];
+}
+
+const displayed_characters = computed<CharacterWithLogs[]>(() => {
+  let _roster = rosterStore.characters.filter((char) => rNames.includes(char.name));
+  _roster = sortBy(_roster, (char) => (char.average_item_level ? 1 / char.average_item_level : 1));
+  _roster = _roster.map((c) => ({
+    ...c,
+    logs: rosterStore.logs.find((l) => l.name === c.name)?.zoneRankings,
+  }));
+  return _roster;
+});
+
 const getItemBySlot = (char_id: number, slot: string) => {
-  return charStore.characters
+  return rosterStore.characters
     .find((c) => c.id === char_id)
     ?.equipped_items.find((eqItem) => eqItem.slot.type === slot);
 };
@@ -116,62 +110,101 @@ const colorByILVL = (ilvl: number | null) => {
     return '';
   }
 };
-
-const display_mode = ref('icon');
 </script>
 
 <template>
-  <q-markup-table dense flat bordered class="text-center" separator="cell">
+  <q-markup-table dense flat bordered class="text-center" separator="cell" wrap-cells>
     <thead>
+      <tr>
+        <th colspan="4">Roster</th>
+        <th
+          v-if="rosterStore.logs.length"
+          :colspan="1 + rosterStore.logs[0]!.zoneRankings.rankings.length"
+        >
+          Logs
+        </th>
+        <th colspan="17">Equipement</th>
+      </tr>
       <q-tr>
         <q-th>Rang</q-th>
         <q-th>iLvL</q-th>
-        <q-th>Personnage</q-th>
         <q-th>Classe</q-th>
+        <q-th>Personnage</q-th>
+        <q-th>Moy.</q-th>
+        <q-th
+          v-for="encounter in rosterStore.logs[0]?.zoneRankings.rankings.map((r) => r.encounter)"
+          :key="encounter.id"
+        >
+          {{ encounter.name }}
+        </q-th>
         <q-th v-for="slotType in slotTypes" :key="slotType">
           {{ slotType }}
         </q-th>
       </q-tr>
     </thead>
     <tbody>
-      <q-tr
-        v-for="(c, idx) in sortBy(charStore.characters, (char) =>
-          char.average_item_level ? 1 / char.average_item_level : 1,
-        )"
-        :key="c.id"
-      >
+      <q-tr v-for="(c, idx) in displayed_characters" :key="c.id">
         <q-td class="text-bold">
           {{ idx + 1 }}
         </q-td>
         <q-td
-          :style="`color: ${idx < 1 ? colors.legendary : idx < 3 ? colors.astounding : idx < 10 ? colors.epic : idx < 15 ? colors.rare : colors.uncommon}`"
+          :style="`color: ${idx < 1 ? rankColors.legendary : idx < 3 ? rankColors.astounding : idx < 10 ? rankColors.epic : idx < 15 ? rankColors.rare : rankColors.uncommon}`"
           class="text-bold"
           >{{ c.average_item_level }}
         </q-td>
         <q-td>
-          <a
-            style="text-decoration: none; color: inherit"
-            target="_blank"
-            :href="`https://classic.warcraftlogs.com/character/eu/sulfuron/${c.name.toLowerCase()}?size=10`"
-          >
-            {{ c.name }}
-          </a>
-        </q-td>
-        <q-td>
           <q-img
             v-if="c.character_class"
-            width="1.5rem"
-            :src="charStore.getClassIcon(c.character_class.id)"
+            width="2rem"
+            :src="rosterStore.getClassIcon(c.character_class.id)"
           />
         </q-td>
+        <q-td>
+          {{ c.name }}
+        </q-td>
+        <template v-if="c.logs">
+          <q-td
+            class="text-bold"
+            :style="'color:' + getRankColor(Math.round(c.logs.bestPerformanceAverage * 10) / 10)"
+          >
+            <a
+              style="text-decoration: none; color: inherit"
+              target="_blank"
+              :href="`https://classic.warcraftlogs.com/character/eu/sulfuron/${c.name.toLowerCase()}?size=10`"
+            >
+              {{ Math.round(c.logs.bestPerformanceAverage * 10) / 10 }}
+            </a>
+          </q-td>
+          <q-td
+            v-for="encounter in rosterStore.logs[0]?.zoneRankings.rankings.map((r) => r.encounter)"
+            :key="encounter.id + '-' + c.id"
+            class="text-bold"
+            :style="
+              'color:' +
+              getRankColor(
+                Math.floor(
+                  c.logs.rankings.find((r) => r.encounter.id === encounter.id)?.rankPercent ?? 0,
+                ),
+              )
+            "
+          >
+            {{
+              Math.floor(
+                c.logs.rankings.find((r) => r.encounter.id === encounter.id)?.rankPercent ?? 0,
+              )
+            }}
+          </q-td>
+        </template>
+        <template v-else>
+          <q-td />
+          <q-td :colspan="rosterStore.logs[0]?.zoneRankings.rankings.length ?? 0" />
+        </template>
         <q-td
           v-for="slotType in slotTypes"
           :key="slotType"
           :class="colorByILVL(getItemIlvl(c.id, slotType))"
         >
-          <span v-if="display_mode == 'ilvl'">getItemIlvl(c.id, slotType)</span>
           <a
-            v-else-if="getItemBySlot(c.id, slotType)"
             :href="`https://www.wowhead.com/cata/item=${getItemBySlot(c.id, slotType)?.item.id}`"
             target="_blank"
             :data-wowhead="
@@ -195,5 +228,4 @@ const display_mode = ref('icon');
       </q-tr>
     </tbody>
   </q-markup-table>
-  <pre>{{ charStore.characters[0]?.equipped_items[0]?.set }}</pre>
 </template>
