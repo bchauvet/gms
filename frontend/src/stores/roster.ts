@@ -18,7 +18,7 @@ export const useRosterStore = defineStore('roster', () => {
   const initialized = ref(false);
   const classes = ref<Class[]>([]);
   const characters = ref<Character[]>(LocalStorage.getItem('roster') || []);
-  const logs = ref<WclCharacter[]>([]);
+  const logs = ref<WclCharacter[]>(LocalStorage.getItem('logs') || []);
 
   const getClassIcon = computed(
     () => (class_id: number) => classes.value.find((cls) => cls.id === class_id)?.icon,
@@ -84,6 +84,12 @@ export const useRosterStore = defineStore('roster', () => {
   watch(
     () => characters.value,
     debounce((value) => LocalStorage.set('roster', value), 1000),
+    { deep: true },
+  );
+
+  watch(
+    () => logs.value,
+    debounce((value) => LocalStorage.set('logs', value), 1000),
     { deep: true },
   );
 
