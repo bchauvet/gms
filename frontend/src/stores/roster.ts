@@ -4,6 +4,16 @@ import { ref, computed, watch } from 'vue';
 import { LocalStorage } from 'quasar';
 import { debounce } from 'quasar';
 
+export declare interface CharacterWithLogs extends Character {
+  logs?: WclCharacter['zoneRankings'];
+}
+
+export declare interface Roster {
+  name: string;
+  raid_size: number;
+  characters: CharacterWithLogs[];
+}
+
 export const useRosterStore = defineStore('roster', () => {
   const initialized = ref(false);
   const classes = ref<Class[]>([]);

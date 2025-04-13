@@ -1,4 +1,4 @@
-const slotTypes = [
+const itemSlots = [
   'HEAD',
   'NECK',
   'SHOULDER',
@@ -40,4 +40,4 @@ const getRankColor = (value: number, max = 100) =>
             ? rankColors.uncommon
             : rankColors.common;
 
-export { slotTypes, rankColors, getRankColor };
+export { itemSlots, rankColors, getRankColor };
