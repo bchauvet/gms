@@ -81,10 +81,11 @@ const api = {
       gd.get(`guild/${realm}/${name}/roster`, { params: { namespace: 'profile-classic-eu' } }),
   },
   character: {
-    get: (realm: string, name: string) => pd.get(`character/${realm}/${name}`),
-    getEquipment: (realm: string, name: string) =>
+    get: (realm: string, name: string, cache = true) =>
+      pd.get(`character/${realm}/${name}${cache ? '' : '?t=' + Date.now()}`),
+    getEquipment: (realm: string, name: string, cache = true) =>
       pd
-        .get(`character/${realm}/${name}/equipment`)
+        .get(`character/${realm}/${name}/equipment${cache ? '' : '?t=' + Date.now()}`)
         .then<EquippedItem[]>((resp) => resp.data.equipped_items),
   },
   item: {

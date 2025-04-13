@@ -32,10 +32,10 @@ export const useRosterStore = defineStore('roster', () => {
     const cache = characters.value.find((c) => c.name === name && c.realm.slug === realm);
     if (cache && !force) return cache;
     let result = <Character>{};
-    await BnetApi.character.get(realm, name).then((resp) => {
+    await BnetApi.character.get(realm, name, !force).then((resp) => {
       result = resp.data;
     });
-    const eqItems = await BnetApi.character.getEquipment(realm, name);
+    const eqItems = await BnetApi.character.getEquipment(realm, name, !force);
     const items = await BnetApi.item.search(eqItems.map((i) => i.item.id));
     const medias = await BnetApi.media.search(
       'item',

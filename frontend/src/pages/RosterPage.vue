@@ -110,6 +110,11 @@ const colorByILVL = (ilvl: number | null) => {
     return '';
   }
 };
+
+const forceRefresh = async (realm: string, name: string) => {
+  await rosterStore.getCharacter(realm, name, true);
+  await rosterStore.getCharacterLogs(realm, name, true);
+};
 </script>
 
 <template>
@@ -159,7 +164,7 @@ const colorByILVL = (ilvl: number | null) => {
             :src="rosterStore.getClassIcon(c.character_class.id)"
           />
         </q-td>
-        <q-td>
+        <q-td @click="forceRefresh(c.realm.slug, c.name)">
           {{ c.name }}
         </q-td>
         <template v-if="c.logs">
