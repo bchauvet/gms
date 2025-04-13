@@ -1,6 +1,6 @@
 import axios, { type AxiosStatic, type InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from 'stores/auth';
-import type { Item, EquippedItem, SearchResult, Media } from './models';
+import type { Item, EquippedItem, SearchResult, Media, Realm } from './models';
 
 const HTTP = axios.create({
   timeout: 60000,
@@ -57,12 +57,23 @@ const api = {
     info: () => ud.get(''),
     accounts: () => ad.get(''),
   },
+  realm: {
+    list: (namespace: string) =>
+      gd
+        .get('search/realm', {
+          params: {
+            namespace: 'dynamic-' + namespace,
+            orderby: 'slug',
+            locale: undefined,
+          },
+        })
+        .then<Realm[]>((resp) => resp.data.results.map((r: SearchResult<Realm>) => r.data)),
+  },
   class: {
     get_icon: (id: number) =>
       gd.get(`media/playable-class/${id}`).then((resp) => resp.data.assets[0].value),
     list: () => gd.get('playable-class/index'),
   },
-  races: () => gd.get('playable-race/index'),
   guild: {
     get: (realm: string, name: string) =>
       gd.get(`guild/${realm}/${name}`, { params: { namespace: 'profile-classic-eu' } }),

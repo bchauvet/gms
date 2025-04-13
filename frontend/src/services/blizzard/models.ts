@@ -31,6 +31,10 @@ export declare interface Character {
     name: string;
     slug: string;
   };
+  guild: {
+    id: number;
+    name: string;
+  },
   character_class?: Class;
   playable_class: {
     id: number;
@@ -104,10 +108,40 @@ export declare interface EquippedItem {
   stats: Stat[];
   set?: {
     display_string: string;
-    items: [{
-      item: Item;
-      is_equipped: boolean;
-    }]
+    items: [
+      {
+        item: Item;
+        is_equipped: boolean;
+      },
+    ];
+  };
+}
+
+export declare interface Realm {
+  id: number;
+  name: {
+    en_GB: string;
+    fr_FR: string;
+  };
+  slug: string;
+  timezone: string;
+  locale: string;
+  region: {
+    id: number;
+    name: {
+      en_GB: string;
+      fr_FR: string;
+    };
+  };
+  type: {
+    name: {
+      en_GB: string;
+      fr_FR: string;
+    };
+  };
+  category: {
+    en_GB: string;
+    fr_FR: string;
   };
 }
 
