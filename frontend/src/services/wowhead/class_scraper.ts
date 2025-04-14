@@ -16,9 +16,12 @@ declare interface Talent {
 export const getClassTalent = async (class_name: string) => {
   const browser = await puppeteer.launch({ headless: true, defaultViewport: null });
   const page = await browser.newPage();
-  await page.goto(`https://www.wowhead.com/cata/talent-calc/${class_name.toLowerCase()}/02`, {
-    waitUntil: 'domcontentloaded',
-  });
+  await page.goto(
+    `https://www.wowhead.com/cata/talent-calc/${class_name.toLowerCase().replace(' ', '-')}/02`,
+    {
+      waitUntil: 'domcontentloaded',
+    },
+  );
 
   await page.waitForSelector('#onetrust-accept-btn-handler');
   await page.click('#onetrust-accept-btn-handler');
