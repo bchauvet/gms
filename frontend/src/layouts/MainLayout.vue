@@ -3,7 +3,7 @@
     <q-header>
       <q-toolbar>
         <q-btn flat dense round icon="home" :to="{ name: 'Home' }" />
-        <q-toolbar-title>Roster Overview</q-toolbar-title>
+        <q-toolbar-title>{{ route.meta.title ?? 'Roster Management System' }}</q-toolbar-title>
         <div>
           <q-btn
             flat
@@ -25,7 +25,9 @@
 import { onMounted } from 'vue';
 import { useAuthStore } from 'stores/auth';
 import { BnetIcon } from 'src/services';
+import { useRoute } from 'vue-router';
 
+const route = useRoute();
 const authStore = useAuthStore();
 
 onMounted(async () => {

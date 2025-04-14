@@ -19,7 +19,14 @@ const routes: RouteRecordRaw[] = [
     children: [
       { path: '', name: 'Home', component: () => import('pages/HomePage.vue') },
       { path: '/profile', name: 'Profile', component: () => import('pages/ProfilePage.vue') },
-      { path: '/roster', name: 'Roster', component: () => import('pages/RosterPage.vue') },
+      {
+        path: '/roster',
+        name: 'Roster',
+        component: () => import('pages/RosterPage.vue'),
+        meta: {
+          title: 'Roster Overview',
+        },
+      },
     ],
   },
   {

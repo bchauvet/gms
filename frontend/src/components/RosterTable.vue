@@ -193,17 +193,22 @@ const charLogUrl = (char: CharacterWithLogs, size?: number, encounter?: number) 
         class="q-ml-md"
       />
     </template>
-    <template v-slot:top-row>
+    <template v-slot:header="props">
       <q-tr>
-        <q-td colspan="5" class="text-center text-bold">Roster</q-td>
-        <q-td
+        <q-th colspan="5" class="text-center text-bold">Roster</q-th>
+        <q-th
           v-if="roster.characters[0]?.logs"
           :colspan="roster.characters[0].logs.rankings.length + 1"
           class="text-center text-bold"
         >
           Warcraft Logs
-        </q-td>
-        <q-td colspan="17" class="text-center text-bold">Equipement</q-td>
+        </q-th>
+        <q-th colspan="17" class="text-center text-bold">Equipement</q-th>
+      </q-tr>
+      <q-tr :props="props">
+        <q-th v-for="col in props.cols" :key="col.name" :props="props">
+          {{ col.label }}
+        </q-th>
       </q-tr>
     </template>
     <template v-slot:body-cell-action="props">
