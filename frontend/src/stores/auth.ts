@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
 import { LocalStorage } from 'quasar';
-import { type BnetUser, BnetApi, WclApi, BnetAuth } from 'src/services/';
+import { type BnetUser, BnetApi, WclApi } from 'src/services/';
 
 type Nullable<T> = T | null;
 

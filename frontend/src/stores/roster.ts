@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { BnetApi, type Class, type Character, WclApi, type WclCharacter } from 'src/services/';
+import { BnetApi, type Character, WclApi, type WclCharacter, charClasses } from 'src/services/';
 import { ref, computed, watch } from 'vue';
 import { LocalStorage } from 'quasar';
 import { debounce } from 'quasar';
@@ -15,28 +15,19 @@ export declare interface Roster {
 }
 
 export const useRosterStore = defineStore('roster', () => {
-  const initialized = ref(false);
-  const classes = ref<Class[]>([]);
   const characters = ref<Character[]>(LocalStorage.getItem('roster') || []);
   const logs = ref<WclCharacter[]>(LocalStorage.getItem('logs') || []);
 
   const getClassIcon = computed(
-    () => (class_id: number) => classes.value.find((cls) => cls.id === class_id)?.icon,
+    () => (class_id: number) => charClasses.find((cls) => cls.id === class_id)?.icon,
   );
 
-  const initStore = async () => {
-    if (initialized.value) return;
-    await BnetApi.class
-      .list()
-      .then((resp) =>
-        resp.data.classes.forEach((cls: Class) =>
-          BnetApi.class
-            .get_icon(cls.id)
-            .then((icon) => classes.value.push({ id: cls.id, name: cls.name, icon: icon })),
-        ),
-      )
-      .finally(() => (initialized.value = true));
-  };
+  const getSpecIcon = computed(
+    () => (class_id: number, spec: string) =>
+      charClasses
+        .find((cls) => cls.id === class_id)
+        ?.specializations?.find((s) => s.name === spec)?.icon,
+  );
 
   const getCharacter = async (realm: string, name: string, force = false) => {
     const cache = characters.value.find((c) => c.name === name && c.realm.slug === realm);
@@ -98,10 +89,9 @@ export const useRosterStore = defineStore('roster', () => {
   return {
     characters,
     logs,
-    classes,
     getClassIcon,
+    getSpecIcon,
     getCharacter,
     getCharacterLogs,
-    initStore,
   };
 });

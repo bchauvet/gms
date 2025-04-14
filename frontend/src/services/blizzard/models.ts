@@ -21,6 +21,20 @@ export declare interface Class {
   id: number;
   name: string;
   icon?: string;
+  specializations: [
+    {
+      name: string;
+      icon: string;
+    },
+    {
+      name: string;
+      icon: string;
+    },
+    {
+      name: string;
+      icon: string;
+    },
+  ];
 }
 
 export declare interface Specialization {
@@ -31,21 +45,21 @@ export declare interface Specialization {
       spent_points: number;
       talents: [
         {
-          talent_rank: number
+          talent_rank: number;
           talent: {
-            id:number
-          },
+            id: number;
+          };
           spell_tooltip: {
             spell: {
               id: number;
               name: string;
-            }
+            };
             description: string;
-          }
-        }
-      ]
-    }
-  ]
+          };
+        },
+      ];
+    },
+  ];
 }
 
 export declare interface Character {
@@ -59,7 +73,7 @@ export declare interface Character {
   guild: {
     id: number;
     name: string;
-  },
+  };
   character_class?: Class;
   playable_class: {
     id: number;
@@ -67,7 +81,7 @@ export declare interface Character {
   playable_race: {
     id: number;
   };
-  specializations: Specialization[]
+  specializations: Specialization[];
   equipped_items: EquippedItem[];
   average_item_level?: number;
 }

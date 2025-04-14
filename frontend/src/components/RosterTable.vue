@@ -50,8 +50,9 @@ const forceRefresh = async (realm: string, name: string) => {
 };
 
 const getCharacterSpec = (char: CharacterWithLogs) => {
+  let spec = null;
   if (char.specializations?.length) {
-    return sortBy(
+    spec = sortBy(
       char.specializations
         .find((s: Specialization) => s.is_active)
         ?.specializations.map((tree) => ({
@@ -60,9 +61,14 @@ const getCharacterSpec = (char: CharacterWithLogs) => {
         })),
       'points',
     ).pop()?.spec;
-  } else {
-    return null;
   }
+  return {
+    name: spec,
+    icon:
+      spec && !!char.character_class
+        ? rosterStore.getSpecIcon(char.character_class.id, spec)
+        : undefined,
+  };
 };
 
 const logColumns = computed(() => {
@@ -213,8 +219,13 @@ const charLogUrl = (char: CharacterWithLogs, size?: number, encounter?: number) 
     </template>
     <template v-slot:body-cell-class="props">
       <q-td class="text-center">
-        <q-img v-if="props.value" width="2rem" :src="rosterStore.getClassIcon(props.value)" />
-        {{ getCharacterSpec(props.row) }}
+        <q-img
+          v-if="props.value && getCharacterSpec(props.row).icon"
+          width="2rem"
+          :title="getCharacterSpec(props.row).name"
+          :src="getCharacterSpec(props.row).icon"
+        />
+        <q-img v-else-if="props.value" width="2rem" :src="rosterStore.getClassIcon(props.value)" />
       </q-td>
     </template>
     <template v-slot:body-cell-bestPerformanceAverage="props">

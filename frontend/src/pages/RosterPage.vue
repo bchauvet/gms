@@ -28,6 +28,7 @@ const rNames = [
   'Hølly',
   'Slianedk',
   'Gayolas',
+  'Wÿreez',
 ];
 
 onMounted(async () => {

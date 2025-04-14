@@ -24,14 +24,11 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { useAuthStore } from 'stores/auth';
-import { useRosterStore } from 'stores/roster';
 import { BnetIcon } from 'src/services';
 
 const authStore = useAuthStore();
-const charStore = useRosterStore();
 
 onMounted(async () => {
   await authStore.initStore();
-  await charStore.initStore();
 });
 </script>
