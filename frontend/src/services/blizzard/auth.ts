@@ -1,4 +1,4 @@
-import { UserManager, type UserManagerSettings, Log } from 'oidc-client-ts';
+import { UserManager, type UserManagerSettings, Log, WebStorageStateStore } from 'oidc-client-ts';
 
 Log.setLogger(console);
 
@@ -9,6 +9,8 @@ const OauthSettings: UserManagerSettings = {
   redirect_uri: `http://localhost:9000/oauth/bnet/`,
   response_type: 'code',
   scope: 'wow.profile',
+  userStore: new WebStorageStateStore({ store: window.localStorage, prefix: 'bnet:' }),
+  automaticSilentRenew: true,
 };
 
 const BnetManager = new UserManager(OauthSettings);

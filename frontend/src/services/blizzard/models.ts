@@ -23,6 +23,31 @@ export declare interface Class {
   icon?: string;
 }
 
+export declare interface Specialization {
+  is_active: boolean;
+  specializations: [
+    {
+      specialization_name: string;
+      spent_points: number;
+      talents: [
+        {
+          talent_rank: number
+          talent: {
+            id:number
+          },
+          spell_tooltip: {
+            spell: {
+              id: number;
+              name: string;
+            }
+            description: string;
+          }
+        }
+      ]
+    }
+  ]
+}
+
 export declare interface Character {
   id: number;
   name: string;
@@ -42,6 +67,7 @@ export declare interface Character {
   playable_race: {
     id: number;
   };
+  specializations: Specialization[]
   equipped_items: EquippedItem[];
   average_item_level?: number;
 }

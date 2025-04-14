@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { getRankColor, rankColors, itemSlots, type Item } from 'src/services';
+import { getRankColor, rankColors, itemSlots, type Item, type Specialization } from 'src/services';
 import { useRosterStore, type Roster, type CharacterWithLogs } from 'stores/roster';
-import { indexOf } from 'lodash';
+import { indexOf, sortBy } from 'lodash';
 import { computed } from 'vue';
 
 const rosterStore = useRosterStore();
@@ -47,6 +47,22 @@ const getItemEnchantmentIds = (char_id: number, slot: string) => {
 const forceRefresh = async (realm: string, name: string) => {
   await rosterStore.getCharacter(realm, name, true);
   await rosterStore.getCharacterLogs(realm, name, true);
+};
+
+const getCharacterSpec = (char: CharacterWithLogs) => {
+  if (char.specializations?.length) {
+    return sortBy(
+      char.specializations
+        .find((s: Specialization) => s.is_active)
+        ?.specializations.map((tree) => ({
+          spec: tree.specialization_name,
+          points: tree.spent_points,
+        })),
+      'points',
+    ).pop()?.spec;
+  } else {
+    return null;
+  }
 };
 
 const logColumns = computed(() => {
@@ -125,7 +141,8 @@ const charLogUrl = (char: CharacterWithLogs, size?: number, encounter?: number) 
       },
       {
         name: 'class',
-        label: 'Classe',
+        label: 'Classe/Spé',
+        align: 'center',
         sortable: true,
         field: (row) => row.character_class.id,
       },
@@ -197,6 +214,7 @@ const charLogUrl = (char: CharacterWithLogs, size?: number, encounter?: number) 
     <template v-slot:body-cell-class="props">
       <q-td class="text-center">
         <q-img v-if="props.value" width="2rem" :src="rosterStore.getClassIcon(props.value)" />
+        {{ getCharacterSpec(props.row) }}
       </q-td>
     </template>
     <template v-slot:body-cell-bestPerformanceAverage="props">
@@ -225,7 +243,7 @@ const charLogUrl = (char: CharacterWithLogs, size?: number, encounter?: number) 
       <q-td
         :class="
           props.value
-            ? `${props.value.level >= 410 ? 'bg-green-3' : props.value.level >= 397 ? 'bg-yellow-3' : props.value.level < 384 ? 'bg-red-3' : ''}`
+            ? `${props.value.quality.type == 'LEGENDARY' || props.value.level >= 410 ? 'bg-green-3' : props.value.level >= 397 ? 'bg-yellow-3' : props.value.level < 384 ? 'bg-red-3' : ''}`
             : ''
         "
       >

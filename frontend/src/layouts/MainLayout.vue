@@ -2,7 +2,7 @@
   <q-layout view="lHh Lpr lFf">
     <q-header>
       <q-toolbar>
-        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
+        <q-btn flat dense round icon="home" :to="{ name: 'Home' }" />
         <q-toolbar-title>Roster Overview</q-toolbar-title>
         <div>
           <q-btn
@@ -15,7 +15,6 @@
         </div>
       </q-toolbar>
     </q-header>
-    <q-drawer v-model="leftDrawerOpen" bordered> </q-drawer>
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -23,18 +22,13 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
 import { useAuthStore } from 'stores/auth';
 import { useRosterStore } from 'stores/roster';
 import { BnetIcon } from 'src/services';
 
 const authStore = useAuthStore();
 const charStore = useRosterStore();
-const leftDrawerOpen = ref(false);
-
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
-}
 
 onMounted(async () => {
   await authStore.initStore();

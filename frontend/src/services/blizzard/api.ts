@@ -1,6 +1,6 @@
 import axios, { type AxiosStatic, type InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from 'stores/auth';
-import type { Item, EquippedItem, SearchResult, Media, Realm } from './models';
+import type { Item, EquippedItem, SearchResult, Media, Realm, Specialization } from './models';
 
 const HTTP = axios.create({
   timeout: 60000,
@@ -87,6 +87,12 @@ const api = {
       pd
         .get(`character/${realm}/${name}/equipment${cache ? '' : '?t=' + Date.now()}`)
         .then<EquippedItem[]>((resp) => resp.data.equipped_items),
+    getSpec: (realm: string, name: string, cache = true) =>
+      pd
+        .get(`character/${realm}/${name}/specializations${cache ? '' : '?t=' + Date.now()}`)
+        .then<{
+          specialization_groups: Specialization[];
+        }>((resp) => resp.data),
   },
   item: {
     search: (ids: number[]) =>

@@ -46,6 +46,7 @@ export const useRosterStore = defineStore('roster', () => {
       result = resp.data;
     });
     const eqItems = await BnetApi.character.getEquipment(realm, name, !force);
+    const specializations = await BnetApi.character.getSpec(realm, name, !force);
     const items = await BnetApi.item.search(eqItems.map((i) => i.item.id));
     const medias = await BnetApi.media.search(
       'item',
@@ -53,6 +54,7 @@ export const useRosterStore = defineStore('roster', () => {
     );
     result = {
       ...result,
+      specializations: specializations.specialization_groups,
       equipped_items: eqItems.map((item) => ({
         ...item,
         item: {

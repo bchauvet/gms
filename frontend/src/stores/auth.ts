@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
 import { LocalStorage } from 'quasar';
-import { type BnetUser, BnetApi, WclApi } from 'src/services/';
+import { type BnetUser, BnetApi, WclApi, BnetAuth } from 'src/services/';
 
 type Nullable<T> = T | null;
 
@@ -13,17 +13,17 @@ export const useAuthStore = defineStore('auth', () => {
 
   watch(
     () => BnetToken.value,
-    () => {
-      LocalStorage.set('bnet_token', BnetToken.value);
-      LocalStorage.set('bnet_user', BnetUserInfo.value);
-    },
+    () => LocalStorage.set('bnet_token', BnetToken.value),
+  );
+
+  watch(
+    () => BnetUserInfo.value,
+    () => LocalStorage.set('bnet_user', BnetUserInfo.value),
   );
 
   watch(
     () => WclToken.value,
-    (value) => {
-      LocalStorage.set('wcl_token', value);
-    },
+    (value) => LocalStorage.set('wcl_token', value),
   );
 
   const initStore = async () => {
