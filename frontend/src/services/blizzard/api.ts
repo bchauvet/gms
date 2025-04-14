@@ -60,7 +60,7 @@ const api = {
   realm: {
     list: (namespace: string) =>
       gd
-        .get('search/realm', {
+        .get(`https://${namespace.split('-').pop()}.api.blizzard.com/data/wow/search/realm`, {
           params: {
             namespace: 'dynamic-' + namespace,
             orderby: 'slug',
@@ -88,11 +88,9 @@ const api = {
         .get(`character/${realm}/${name}/equipment${cache ? '' : '?t=' + Date.now()}`)
         .then<EquippedItem[]>((resp) => resp.data.equipped_items),
     getSpec: (realm: string, name: string, cache = true) =>
-      pd
-        .get(`character/${realm}/${name}/specializations${cache ? '' : '?t=' + Date.now()}`)
-        .then<{
-          specialization_groups: Specialization[];
-        }>((resp) => resp.data),
+      pd.get(`character/${realm}/${name}/specializations${cache ? '' : '?t=' + Date.now()}`).then<{
+        specialization_groups: Specialization[];
+      }>((resp) => resp.data),
   },
   item: {
     search: (ids: number[]) =>

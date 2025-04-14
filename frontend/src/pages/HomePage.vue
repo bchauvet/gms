@@ -6,7 +6,6 @@
       </q-card-section>
       <q-card-section>
         <q-select
-          disable
           input-debounce="500"
           outlined
           dense
@@ -130,13 +129,17 @@ const error = ref(false);
 onMounted(async () => {
   await guildStore.initStore();
   realmOptions.value = await BnetApi.realm.list(region.value!.namespace);
+  realmOptions.value = realmOptions.value.filter((r) => !RegExp(/\d/).test(r.slug));
   realm.value = realmOptions.value.find((r) => r.slug === 'sulfuron');
 });
 
 watch(
   () => region.value?.namespace,
   async (value) => {
-    if (value) realmOptions.value = await BnetApi.realm.list(value);
+    if (value) {
+      realmOptions.value = await BnetApi.realm.list(value);
+      realmOptions.value = realmOptions.value.filter((r) => !RegExp(/\d/).test(r.slug));
+    }
   },
 );
 
