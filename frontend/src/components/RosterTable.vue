@@ -56,7 +56,7 @@ const getCharacterSpec = (char: CharacterWithLogs) => {
     spec = sortBy(
       char.specializations
         .find((s: Specialization) => s.is_active)
-        ?.specializations.map((tree) => ({
+        ?.specializations?.map((tree) => ({
           spec: tree.specialization_name,
           points: tree.spent_points,
         })),
