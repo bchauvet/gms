@@ -107,12 +107,7 @@
           { "row": 4, "col": 2, "spell": 34460, "name": "ferocious-inspiration" },
           { "row": 2, "col": 2, "spell": 82692, "name": "focus-fire" },
           { "row": 5, "col": 2, "spell": 53252, "name": "invigoration" },
-          {
-            "row": 4,
-            "col": 1,
-            "spell": 19574,
-            "name": "bestial-wrath?spellModifier=53262%2C53263%2C53264"
-          },
+          { "row": 4, "col": 1, "spell": 19574, "name": "bestial-wrath" },
           { "row": 3, "col": 2, "spell": 82748, "name": "killing-streak" },
           { "row": 2, "col": 0, "spell": 53256, "name": "cobra-strikes" },
           { "row": 3, "col": 0, "spell": 53262, "name": "longevity" },
@@ -166,12 +161,7 @@
           { "row": 4, "col": 2, "spell": 53295, "name": "noxious-stings" },
           { "row": 4, "col": 3, "spell": 53290, "name": "hunting-party" },
           { "row": 5, "col": 0, "spell": 53302, "name": "sniper-training" },
-          {
-            "row": 6,
-            "col": 1,
-            "spell": 3674,
-            "name": "black-arrow?spellModifier=34491%2C34492%2C34493"
-          },
+          { "row": 6, "col": 1, "spell": 3674, "name": "black-arrow" },
           { "row": 3, "col": 1, "spell": 83494, "name": "mirrored-blades" },
           { "row": 2, "col": 0, "spell": 34497, "name": "thrill-of-the-hunt" },
           { "row": 1, "col": 1, "spell": 19376, "name": "trap-mastery" },
@@ -194,20 +184,10 @@
           { "row": 0, "col": 1, "spell": 12598, "name": "improved-counterspell" },
           { "row": 1, "col": 0, "spell": 29447, "name": "torment-the-weak" },
           { "row": 1, "col": 3, "spell": 31569, "name": "improved-blink" },
-          {
-            "row": 2,
-            "col": 1,
-            "spell": 12043,
-            "name": "presence-of-mind?spellModifier=44378%2C44379"
-          },
+          { "row": 2, "col": 1, "spell": 12043, "name": "presence-of-mind" },
           { "row": 2, "col": 3, "spell": 31574, "name": "prismatic-cloak" },
           { "row": 4, "col": 0, "spell": 31571, "name": "arcane-potency" },
-          {
-            "row": 6,
-            "col": 1,
-            "spell": 12042,
-            "name": "arcane-power?spellModifier=44378%2C44379%2C99064"
-          },
+          { "row": 6, "col": 1, "spell": 12042, "name": "arcane-power" },
           { "row": 3, "col": 2, "spell": 44394, "name": "incanters-absorption" },
           { "row": 2, "col": 0, "spell": 44378, "name": "arcane-flows" },
           { "row": 5, "col": 2, "spell": 31584, "name": "improved-mana-gem" },
@@ -256,36 +236,16 @@
         "talents": [
           { "row": 1, "col": 0, "spell": 31670, "name": "ice-floes" },
           { "row": 1, "col": 3, "spell": 11175, "name": "permafrost" },
-          {
-            "row": 2,
-            "col": 1,
-            "spell": 12472,
-            "name": "icy-veins?spellModifier=31670%2C31672%2C55094"
-          },
+          { "row": 2, "col": 1, "spell": 12472, "name": "icy-veins" },
           { "row": 2, "col": 0, "spell": 11185, "name": "ice-shards" },
           { "row": 0, "col": 0, "spell": 83049, "name": "early-frost" },
-          {
-            "row": 3,
-            "col": 1,
-            "spell": 11958,
-            "name": "cold-snap?spellModifier=31670%2C31672%2C55091%2C55092%2C55094"
-          },
+          { "row": 3, "col": 1, "spell": 11958, "name": "cold-snap" },
           { "row": 2, "col": 2, "spell": 44543, "name": "fingers-of-frost" },
           { "row": 4, "col": 0, "spell": 44745, "name": "shattered-barrier" },
-          {
-            "row": 4,
-            "col": 1,
-            "spell": 11426,
-            "name": "ice-barrier?spellModifier=31670%2C31672%2C55091%2C55092%2C55094%2C63095"
-          },
+          { "row": 4, "col": 1, "spell": 11426, "name": "ice-barrier" },
           { "row": 3, "col": 2, "spell": 44546, "name": "brain-freeze" },
           { "row": 3, "col": 0, "spell": 44561, "name": "enduring-winter" },
-          {
-            "row": 6,
-            "col": 1,
-            "spell": 44572,
-            "name": "deep-freeze?spellModifier=11151%2C12952%2C12953%2C31674%2C31675%2C31676"
-          },
+          { "row": 6, "col": 1, "spell": 44572, "name": "deep-freeze" },
           { "row": 1, "col": 2, "spell": 83156, "name": "piercing-chill" },
           { "row": 0, "col": 1, "spell": 11151, "name": "piercing-ice" },
           { "row": 0, "col": 2, "spell": 11170, "name": "shatter" },
@@ -343,12 +303,7 @@
           { "row": 4, "col": 1, "spell": 20925, "name": "holy-shield" },
           { "row": 5, "col": 1, "spell": 53709, "name": "sacred-duty" },
           { "row": 1, "col": 0, "spell": 53695, "name": "judgements-of-the-just" },
-          {
-            "row": 2,
-            "col": 2,
-            "spell": 53595,
-            "name": "hammer-of-the-righteous?spellModifier=31878"
-          },
+          { "row": 2, "col": 2, "spell": 53595, "name": "hammer-of-the-righteous" },
           { "row": 4, "col": 0, "spell": 26016, "name": "vindication" },
           { "row": 2, "col": 3, "spell": 84635, "name": "wrath-of-the-lightbringer" },
           { "row": 3, "col": 0, "spell": 20177, "name": "reckoning" },
@@ -434,12 +389,7 @@
           { "row": 5, "col": 0, "spell": 47558, "name": "test-of-faith" },
           { "row": 6, "col": 1, "spell": 47788, "name": "guardian-spirit" },
           { "row": 0, "col": 0, "spell": 14908, "name": "improved-renew" },
-          {
-            "row": 2,
-            "col": 2,
-            "spell": 724,
-            "name": "lightwell?spellModifier=47586%2C47587%2C47588"
-          },
+          { "row": 2, "col": 2, "spell": 724, "name": "lightwell" },
           { "row": 4, "col": 1, "spell": 14751, "name": "chakra" },
           { "row": 5, "col": 1, "spell": 87430, "name": "heavenly-voice" },
           { "row": 1, "col": 1, "spell": 19236, "name": "desperate-prayer" },
@@ -544,7 +494,7 @@
           { "row": 1, "col": 0, "spell": 13981, "name": "elusiveness" },
           { "row": 1, "col": 2, "spell": 14057, "name": "opportunity" },
           { "row": 0, "col": 1, "spell": 14079, "name": "improved-ambush" },
-          { "row": 4, "col": 1, "spell": 14185, "name": "preparation?spellModifier=58414%2C58415" },
+          { "row": 4, "col": 1, "spell": 14185, "name": "preparation" },
           { "row": 3, "col": 1, "spell": 14183, "name": "premeditation" },
           { "row": 2, "col": 2, "spell": 16511, "name": "hemorrhage" },
           { "row": 5, "col": 2, "spell": 14171, "name": "serrated-blades" },
@@ -687,12 +637,7 @@
           { "row": 4, "col": 2, "spell": 63156, "name": "decimation" },
           { "row": 5, "col": 2, "spell": 47236, "name": "demonic-pact" },
           { "row": 6, "col": 1, "spell": 59672, "name": "metamorphosis" },
-          {
-            "row": 2,
-            "col": 1,
-            "spell": 47193,
-            "name": "demonic-empowerment?spellModifier=63117%2C63121"
-          },
+          { "row": 2, "col": 1, "spell": 47193, "name": "demonic-empowerment" },
           { "row": 4, "col": 0, "spell": 85109, "name": "ancient-grimoire" },
           { "row": 4, "col": 1, "spell": 85105, "name": "inferno" },
           { "row": 1, "col": 2, "spell": 30143, "name": "demonic-aegis" },
@@ -772,7 +717,7 @@
           { "row": 2, "col": 2, "spell": 12317, "name": "enrage" },
           { "row": 1, "col": 3, "spell": 12323, "name": "piercing-howl" },
           { "row": 1, "col": 1, "spell": 12321, "name": "booming-voice" },
-          { "row": 2, "col": 1, "spell": 12292, "name": "death-wish?spellModifier=46908%2C46909" },
+          { "row": 2, "col": 1, "spell": 12292, "name": "death-wish" },
           { "row": 4, "col": 0, "spell": 46910, "name": "furious-attacks" },
           { "row": 2, "col": 0, "spell": 12319, "name": "flurry" },
           { "row": 4, "col": 2, "spell": 12329, "name": "meat-cleaver" },
@@ -829,12 +774,7 @@
           { "row": 3, "col": 2, "spell": 50365, "name": "improved-blood-presence" },
           { "row": 0, "col": 2, "spell": 48978, "name": "bladed-armor" },
           { "row": 0, "col": 0, "spell": 48979, "name": "butchery" },
-          {
-            "row": 4,
-            "col": 1,
-            "spell": 48982,
-            "name": "rune-tap?spellModifier=48985%2C49488%2C49489"
-          },
+          { "row": 4, "col": 1, "spell": 48982, "name": "rune-tap" },
           { "row": 1, "col": 1, "spell": 49004, "name": "scent-of-blood" },
           { "row": 4, "col": 0, "spell": 52284, "name": "will-of-the-necropolis" },
           { "row": 3, "col": 1, "spell": 49027, "name": "blood-parasite" },

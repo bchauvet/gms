@@ -39,7 +39,7 @@ export const getClassTalent = async (class_name: string) => {
             row: Number(icon.getAttribute('data-row')),
             col: Number(icon.getAttribute('data-col')),
             spell: Number(a.getAttribute('href')?.split('spell=').pop()?.split('/')[0]),
-            name: a.getAttribute('href')?.split('/').pop() || '',
+            name: a.getAttribute('href')?.split('/').pop()?.split('?')[0] || '',
           });
         });
       });

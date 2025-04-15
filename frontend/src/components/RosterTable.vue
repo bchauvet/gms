@@ -2,11 +2,10 @@
 import { getRankColor, rankColors, itemSlots, type Item, type Specialization } from 'src/services';
 import { useRosterStore, type Roster, type CharacterWithLogs } from 'stores/roster';
 import { indexOf, sortBy } from 'lodash';
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { charClasses } from 'src/services';
 
 const rosterStore = useRosterStore();
-const selectedChar = ref();
 
 const roster = defineModel<Roster>('roster', { required: true });
 
@@ -139,12 +138,24 @@ function removeZerosAfterLastPositive(arr: number[]) {
   }
 }
 
+function cleanSpellName(spell_name: string) {
+  const _result = spell_name
+    .replaceAll(' ', '-')
+    .replaceAll("'", '')
+    .replaceAll(':', '')
+    .replaceAll('!', '')
+    .replaceAll('.', '-')
+    .replaceAll('--', '-')
+    .toLowerCase();
+  return _result.endsWith('-') ? _result.slice(0, -1) : _result;
+}
+
 const ctcUrl = (char: CharacterWithLogs) => {
   const _charTalent = char.specializations
     .find((s) => s.is_active)
     ?.specializations.map((spe) =>
       spe.talents.map((t) => ({
-        spell: t.spell_tooltip.spell.name.replaceAll(' ', '-').toLowerCase(),
+        spell: cleanSpellName(t.spell_tooltip.spell.name),
         points: t.talent_rank,
       })),
     )
@@ -160,7 +171,27 @@ const ctcUrl = (char: CharacterWithLogs) => {
     )
     .join('-');
   const _className = char.character_class?.name.toLowerCase().replaceAll(' ', '-');
-  return `https://cata.wowhead.com/talent-calc/embed/${_className}/${_talentStr}`;
+  return `https://cata.wowhead.com/talent-calc/${_className}/${_talentStr}`;
+};
+
+const getCharTalentBreakDown = (char: CharacterWithLogs) => {
+  const _charTalent = char.specializations
+    .find((s) => s.is_active)
+    ?.specializations.map((spe) =>
+      spe.talents.map((t) => ({
+        spell: cleanSpellName(t.spell_tooltip.spell.name),
+        points: t.talent_rank,
+      })),
+    )
+    .flat();
+  return charClasses
+    .find((cls) => cls.id === char?.character_class?.id)
+    ?.specializations.map((s) =>
+      sortBy(s.talents, ['row', 'col'])
+        .map((t) => _charTalent?.find((k) => k.spell === t.name)?.points || 0)
+        .reduce((acc, cur) => acc + cur, 0),
+    )
+    .join('/');
 };
 </script>
 
@@ -264,13 +295,18 @@ const ctcUrl = (char: CharacterWithLogs) => {
     </template>
     <template v-slot:body-cell-class="props">
       <q-td class="text-center">
-        <q-img
+        <a
           v-if="props.value && getCharacterSpec(props.row).icon"
-          width="2rem"
-          :title="getCharacterSpec(props.row).name"
-          :src="getCharacterSpec(props.row).icon"
-          @click="selectedChar = props.row"
-        />
+          :href="ctcUrl(props.row)"
+          target="_blank"
+        >
+          <q-img
+            width="2rem"
+            :title="getCharacterSpec(props.row).name"
+            :src="getCharacterSpec(props.row).icon"
+          />
+          <span><br />{{ getCharTalentBreakDown(props.row) }}</span>
+        </a>
         <q-img v-else-if="props.value" width="2rem" :src="rosterStore.getClassIcon(props.value)" />
       </q-td>
     </template>
@@ -333,18 +369,6 @@ const ctcUrl = (char: CharacterWithLogs) => {
       </q-td>
     </template>
   </q-table>
-  <q-dialog :model-value="!!selectedChar" full-width @hide="selectedChar = null">
-    <q-card>
-      <q-card-section>
-        <div class="text-h6">Talent Calculator</div>
-      </q-card-section>
-      <q-card-section>
-        <a target="_blank" :href="ctcUrl(selectedChar)">
-          CALCULATOR
-        </a>
-      </q-card-section>
-    </q-card>
-  </q-dialog>
 </template>
 
 <style>
