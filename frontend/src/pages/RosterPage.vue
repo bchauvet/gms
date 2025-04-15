@@ -29,6 +29,8 @@ const rNames = [
   'Slianedk',
   'Gayolas',
   'Wÿreez',
+  'Medadk',
+  'Medawar'
 ];
 
 onMounted(async () => {

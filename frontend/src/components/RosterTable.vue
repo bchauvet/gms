@@ -211,16 +211,12 @@ const getCharTalentBreakDown = (char: CharacterWithLogs) => {
         field: 'id',
       },
       {
-        name: 'rank',
-        label: 'Rang',
-        field: (row) => indexOf(roster.characters, row) + 1,
-        align: 'center',
-      },
-      {
         name: 'class',
         label: 'Classe/Spé',
         align: 'center',
         sortable: true,
+        sort: (a, b, rowA, rowB) =>
+          getCharacterSpec(rowA)?.name?.localeCompare(getCharacterSpec(rowB)?.name!) || 0,
         field: (row) => row.character_class.id,
       },
       {
@@ -358,7 +354,7 @@ const getCharTalentBreakDown = (char: CharacterWithLogs) => {
             "
           >
             <q-img
-              width="2rem"
+              width="2.5rem"
               :src="
                 'https://wow.zamimg.com/images/wow/icons/large/' +
                 getItemIcon(props.row.id, itemSlot.replace('body-cell-', ''))
@@ -367,6 +363,11 @@ const getCharTalentBreakDown = (char: CharacterWithLogs) => {
           </a>
         </div>
       </q-td>
+    </template>
+    <template #bottom-row>
+      <q-tr>
+        <q-td colspan="100%"></q-td>
+      </q-tr>
     </template>
   </q-table>
 </template>
