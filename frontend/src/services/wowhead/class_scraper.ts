@@ -11,6 +11,7 @@ declare interface Talent {
   row: number;
   col: number;
   spell: number;
+  name: string;
 }
 
 export const getClassTalent = async (class_name: string) => {
@@ -38,6 +39,7 @@ export const getClassTalent = async (class_name: string) => {
             row: Number(icon.getAttribute('data-row')),
             col: Number(icon.getAttribute('data-col')),
             spell: Number(a.getAttribute('href')?.split('spell=').pop()?.split('/')[0]),
+            name: a.getAttribute('href')?.split('/').pop() || '',
           });
         });
       });
@@ -73,6 +75,7 @@ export const getClassTalent = async (class_name: string) => {
 };
 
 const classNames = [
+  'Death Knight',
   'Druid',
   'Hunter',
   'Mage',
@@ -82,7 +85,6 @@ const classNames = [
   'Shaman',
   'Warlock',
   'Warrior',
-  'Death Knight',
 ];
 
 const data = [];

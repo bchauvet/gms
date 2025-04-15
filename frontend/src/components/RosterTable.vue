@@ -2,9 +2,11 @@
 import { getRankColor, rankColors, itemSlots, type Item, type Specialization } from 'src/services';
 import { useRosterStore, type Roster, type CharacterWithLogs } from 'stores/roster';
 import { indexOf, sortBy } from 'lodash';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
+import { charClasses } from 'src/services';
 
 const rosterStore = useRosterStore();
+const selectedChar = ref();
 
 const roster = defineModel<Roster>('roster', { required: true });
 
@@ -122,6 +124,44 @@ const charLogUrl = (char: CharacterWithLogs, size?: number, encounter?: number) 
   url += encounter ? `&boss=${encounter}` : '';
   return url;
 };
+
+function removeZerosAfterLastPositive(arr: number[]) {
+  if (arr.some((v) => v > 0)) {
+    let lastPositiveIndex = 0;
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i]! > 0) {
+        lastPositiveIndex = i;
+      }
+    }
+    return arr.slice(0, lastPositiveIndex + 1);
+  } else {
+    return [];
+  }
+}
+
+const ctcUrl = (char: CharacterWithLogs) => {
+  const _charTalent = char.specializations
+    .find((s) => s.is_active)
+    ?.specializations.map((spe) =>
+      spe.talents.map((t) => ({
+        spell: t.spell_tooltip.spell.name.replaceAll(' ', '-').toLowerCase(),
+        points: t.talent_rank,
+      })),
+    )
+    .flat();
+  const _talentStr = charClasses
+    .find((cls) => cls.id === char?.character_class?.id)
+    ?.specializations.map((s) =>
+      removeZerosAfterLastPositive(
+        sortBy(s.talents, ['row', 'col']).map(
+          (t) => _charTalent?.find((k) => k.spell === t.name)?.points || 0,
+        ),
+      ).join(''),
+    )
+    .join('-');
+  const _className = char.character_class?.name.toLowerCase().replaceAll(' ', '-');
+  return `https://cata.wowhead.com/talent-calc/embed/${_className}/${_talentStr}`;
+};
 </script>
 
 <template>
@@ -229,6 +269,7 @@ const charLogUrl = (char: CharacterWithLogs, size?: number, encounter?: number) 
           width="2rem"
           :title="getCharacterSpec(props.row).name"
           :src="getCharacterSpec(props.row).icon"
+          @click="selectedChar = props.row"
         />
         <q-img v-else-if="props.value" width="2rem" :src="rosterStore.getClassIcon(props.value)" />
       </q-td>
@@ -292,6 +333,18 @@ const charLogUrl = (char: CharacterWithLogs, size?: number, encounter?: number) 
       </q-td>
     </template>
   </q-table>
+  <q-dialog :model-value="!!selectedChar" full-width @hide="selectedChar = null">
+    <q-card>
+      <q-card-section>
+        <div class="text-h6">Talent Calculator</div>
+      </q-card-section>
+      <q-card-section>
+        <a target="_blank" :href="ctcUrl(selectedChar)">
+          CALCULATOR
+        </a>
+      </q-card-section>
+    </q-card>
+  </q-dialog>
 </template>
 
 <style>
