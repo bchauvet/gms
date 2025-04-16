@@ -222,7 +222,8 @@ const getCharTalentBreakDown = (char: CharacterWithLogs) => {
       {
         name: 'ilvl',
         label: 'iLvL',
-        field: 'average_item_level',
+        field: (row) =>
+          `${row.equipped_item_level} ${row.average_item_level !== row.equipped_item_level ? '(' + row.average_item_level + ')' : ''}`,
         align: 'center',
         classes: 'text-bold',
         sortable: true,
@@ -244,7 +245,18 @@ const getCharTalentBreakDown = (char: CharacterWithLogs) => {
     ]"
   >
     <template #top="props">
-      <div class="q-table__title">{{ roster.name }} (R{{ roster.raid_size }})</div>
+      <div class="q-table__title text-bold">
+        {{ roster.name }} | R{{ roster.raid_size }} |
+        {{
+          Math.round(
+            (roster.characters
+              .map((c) => c.equipped_item_level || 0)
+              .reduce((acc, cur) => acc + cur, 0) *
+              10) /
+              roster.characters.length,
+          ) / 10
+        }}
+      </div>
       <q-space />
       <q-btn
         flat
@@ -301,7 +313,7 @@ const getCharTalentBreakDown = (char: CharacterWithLogs) => {
             :title="getCharacterSpec(props.row).name"
             :src="getCharacterSpec(props.row).icon"
           />
-          <span><br />{{ getCharTalentBreakDown(props.row) }}</span>
+          <span style="font-size: 0.8rem"><br />{{ getCharTalentBreakDown(props.row) }}</span>
         </a>
         <q-img v-else-if="props.value" width="2rem" :src="rosterStore.getClassIcon(props.value)" />
       </q-td>
@@ -379,5 +391,16 @@ a {
 }
 th > i {
   display: none !important;
+}
+
+.q-table th {
+  font-size: inherit;
+}
+.q-table tbody td {
+  font-size: inherit;
+}
+
+.q-table--dense .q-table td {
+  padding: 2px
 }
 </style>

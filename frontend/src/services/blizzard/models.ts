@@ -84,6 +84,7 @@ export declare interface Character {
   specializations: Specialization[];
   equipped_items: EquippedItem[];
   average_item_level?: number;
+  equipped_item_level?: number;
 }
 
 export declare interface Member {
