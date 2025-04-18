@@ -11,7 +11,7 @@ const { Logout } = authStore;
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-page-container>
-      <q-page class="row items-center justify-evenly bg-dark">
+      <q-page class="row items-center justify-evenly bg-dark bg-image">
         <q-card>
           <q-card-section>
             <q-btn
@@ -24,8 +24,15 @@ const { Logout } = authStore;
             />
           </q-card-section>
         </q-card>
-        <router-view />
       </q-page>
     </q-page-container>
   </q-layout>
 </template>
+
+<style scoped>
+.bg-image {
+  background-image: url('/cata.jpg') !important;
+  background-size: cover !important;
+  background-position: center !important;
+}
+</style>
