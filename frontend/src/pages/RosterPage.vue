@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import { useRosterStore, type CharacterWithLogs } from 'stores/roster';
-import { sortBy } from 'lodash';
+import { sortBy, uniqBy } from 'lodash';
 import RosterTable from 'components/roster/RosterTable.vue';
 import { useRoute } from 'vue-router';
 
@@ -30,11 +30,7 @@ const charNames = ref<string[]>(
     'Føxdust',
     'Méda',
     'Hølly',
-    'Slianedk',
     'Gayolas',
-    'Wÿreez',
-    'Medadk',
-    'Medawar',
     'Lightstarky',
   ],
 );
@@ -60,7 +56,7 @@ const displayed_characters = computed<CharacterWithLogs[]>(() => {
       ? rosterStore.logs.find((l) => l.name === c.name)?.zoneRankings
       : [],
   }));
-  return _roster;
+  return uniqBy(_roster, 'id');
 });
 </script>
 

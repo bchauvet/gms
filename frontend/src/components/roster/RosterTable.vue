@@ -2,47 +2,19 @@
 import { getRankColor, rankColors, itemSlots, type Item, type Specialization } from 'src/services';
 import { useRosterStore, type Roster, type CharacterWithLogs } from 'stores/roster';
 import { indexOf, sortBy } from 'lodash';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { charClasses } from 'src/services';
+import EquippedItemIcon from 'components/EquippedItemIcon.vue';
 
 const rosterStore = useRosterStore();
 
 const roster = defineModel<Roster>('roster', { required: true });
+const displayOffhand = ref(false);
 
 const getItemBySlot = (char_id: number, slot: string) => {
   return roster.value.characters
     .find((c) => c.id === char_id)
     ?.equipped_items.find((eqItem) => eqItem.slot.type === slot);
-};
-
-const getItemIcon = (char_id: number, slot: string) => {
-  const item = getItemBySlot(char_id, slot)?.item;
-  if (item?.media.assets?.length) {
-    return item.media.assets[0].value.split('/').pop();
-  }
-  return null;
-};
-
-const getItemGemIds = (char_id: number, slot: string) => {
-  const item = getItemBySlot(char_id, slot);
-  if (item?.enchantments) {
-    return item.enchantments
-      .filter((e) => !e.enchantment_slot?.type)
-      .map((k) => k.source_item?.id)
-      .filter((e) => e)
-      .join(':');
-  }
-  return '';
-};
-
-const getItemEnchantmentIds = (char_id: number, slot: string) => {
-  const item = getItemBySlot(char_id, slot);
-  if (item?.enchantments) {
-    return item.enchantments
-      .filter((e) => e.enchantment_slot?.type)
-      .map((k) => k.enchantment_id)
-      .join(':');
-  }
 };
 
 const forceRefresh = async (realm: string, name: string) => {
@@ -72,8 +44,13 @@ const getCharacterSpec = (char: CharacterWithLogs) => {
   };
 };
 
+const encounterList = computed(() => {
+  const _rankings = roster.value.characters.find((c) => c.logs)?.logs?.rankings;
+  return _rankings ? _rankings.map((r) => r.encounter) : [];
+});
+
 const logColumns = computed(() => {
-  if (rosterStore.logs.length) {
+  if (encounterList.value.length) {
     return [
       {
         name: 'bestPerformanceAverage',
@@ -89,9 +66,7 @@ const logColumns = computed(() => {
           name: e.name,
           label: e.name,
           field: (row: CharacterWithLogs) =>
-            Math.floor(
-              row.logs?.rankings.find((l) => l.encounter.id === e.id)?.rankPercent ?? 0,
-            ),
+            Math.floor(row.logs?.rankings.find((l) => l.encounter.id === e.id)?.rankPercent ?? 0),
           sortable: true,
           sortOrder: 'da' as 'da' | 'ad',
           align: 'center' as 'left' | 'right' | 'center',
@@ -103,21 +78,18 @@ const logColumns = computed(() => {
   }
 });
 
-const encounterList = computed(() => {
-  const _rankings = roster.value.characters.find((c) => c.logs)?.logs?.rankings;
-  return _rankings ? _rankings.map((r) => r.encounter) : [];
-});
-
 const equipmentColumns = computed(() => {
-  return itemSlots.map((slotType) => ({
-    name: slotType,
-    label: slotType,
-    field: (row: CharacterWithLogs) => getItemBySlot(row.id, slotType)?.item,
-    sortable: true,
-    align: 'center' as 'left' | 'right' | 'center',
-    sort: (a: Item, b: Item) => a.level! - b.level!,
-    sortOrder: 'da' as 'da' | 'ad',
-  }));
+  return itemSlots
+    .filter((s) => displayOffhand.value || !['OFF_HAND', 'RANGED'].includes(s))
+    .map((slotType) => ({
+      name: slotType,
+      label: slotType,
+      field: (row: CharacterWithLogs) => getItemBySlot(row.id, slotType)?.item,
+      sortable: true,
+      align: 'center' as 'left' | 'right' | 'center',
+      sort: (a: Item, b: Item) => a.level! - b.level!,
+      sortOrder: 'da' as 'da' | 'ad',
+    }));
 });
 
 const charLogUrl = (char: CharacterWithLogs, size?: number, encounter?: number) => {
@@ -251,7 +223,7 @@ const getCharTalentBreakDown = (char: CharacterWithLogs) => {
   >
     <template #top="props">
       <div class="q-table__title text-bold">
-        {{ roster.name }} | R{{ roster.raid_size }} |
+        {{ roster.name }} | {{ roster.characters.length }} |
         {{
           Math.round(
             (roster.characters
@@ -279,15 +251,18 @@ const getCharTalentBreakDown = (char: CharacterWithLogs) => {
     </template>
     <template v-slot:header="props">
       <q-tr>
-        <q-th colspan="5" class="text-center text-bold">Roster</q-th>
+        <q-th colspan="4" class="text-center text-bold">Roster</q-th>
         <q-th
           v-if="encounterList.length"
           :colspan="encounterList.length + 1"
           class="text-center text-bold"
         >
-          Warcraft Logs
+          Warcraft Logs (R{{ roster.raid_size }})
         </q-th>
-        <q-th colspan="17" class="text-center text-bold">Equipement</q-th>
+        <q-th :colspan="equipmentColumns.length" class="text-center text-bold">
+          Equipement
+          <q-toggle v-model="displayOffhand" />
+        </q-th>
       </q-tr>
       <q-tr :props="props">
         <q-th v-for="col in props.cols" :key="col.name" :props="props">
@@ -354,30 +329,7 @@ const getCharTalentBreakDown = (char: CharacterWithLogs) => {
         "
       >
         <div class="text-center">
-          <a
-            v-if="props.value"
-            :href="`https://www.wowhead.com/cata/item=${props.value?.id}`"
-            target="_blank"
-            :data-wowhead="
-              'gems=' +
-              getItemGemIds(props.row.id, itemSlot) +
-              '&ench=' +
-              getItemEnchantmentIds(props.row.id, itemSlot) +
-              '&pcs=' +
-              getItemBySlot(props.row.id, itemSlot)
-                ?.set?.items.filter((k) => k.is_equipped)
-                .map((k) => k.item.id)
-                .join(':')
-            "
-          >
-            <q-img
-              width="2.5rem"
-              :src="
-                'https://wow.zamimg.com/images/wow/icons/large/' +
-                getItemIcon(props.row.id, itemSlot.replace('body-cell-', ''))
-              "
-            />
-          </a>
+          <EquippedItemIcon v-if="props.value" :item="getItemBySlot(props.row.id, itemSlot)!" />
         </div>
       </q-td>
     </template>
