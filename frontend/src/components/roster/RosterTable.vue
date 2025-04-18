@@ -87,7 +87,8 @@ const equipmentColumns = computed(() => {
       field: (row: CharacterWithLogs) => getItemBySlot(row.id, slotType)?.item,
       sortable: true,
       align: 'center' as 'left' | 'right' | 'center',
-      sort: (a: Item, b: Item) => a.level! - b.level!,
+      sort: (a: Item, b: Item) =>
+        sortBy([a, b], ['level', 'id']).indexOf(a) - sortBy([a, b], ['level', 'id']).indexOf(b),
       sortOrder: 'da' as 'da' | 'ad',
     }));
 });
