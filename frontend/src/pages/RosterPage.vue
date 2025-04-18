@@ -56,7 +56,9 @@ const displayed_characters = computed<CharacterWithLogs[]>(() => {
   _roster = sortBy(_roster, (char) => (char.average_item_level ? 1 / char.average_item_level : 1));
   _roster = _roster.map((c) => ({
     ...c,
-    logs: rosterStore.logs.find((l) => l.name === c.name)?.zoneRankings,
+    logs: rosterStore.logs.length
+      ? rosterStore.logs.find((l) => l.name === c.name)?.zoneRankings
+      : [],
   }));
   return _roster;
 });

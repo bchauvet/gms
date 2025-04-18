@@ -84,13 +84,13 @@ const logColumns = computed(() => {
         sortOrder: 'da' as 'da' | 'ad',
         align: 'center' as 'left' | 'right' | 'center',
       },
-      ...rosterStore.logs[0]!.zoneRankings.rankings.map((r) => {
+      ...encounterList.value.map((e) => {
         return {
-          name: r.encounter.name,
-          label: r.encounter.name,
+          name: e.name,
+          label: e.name,
           field: (row: CharacterWithLogs) =>
             Math.floor(
-              row.logs?.rankings.find((l) => l.encounter.id === r.encounter.id)?.rankPercent ?? 0,
+              row.logs?.rankings.find((l) => l.encounter.id === e.id)?.rankPercent ?? 0,
             ),
           sortable: true,
           sortOrder: 'da' as 'da' | 'ad',
@@ -101,6 +101,11 @@ const logColumns = computed(() => {
   } else {
     return [];
   }
+});
+
+const encounterList = computed(() => {
+  const _rankings = roster.value.characters.find((c) => c.logs)?.logs?.rankings;
+  return _rankings ? _rankings.map((r) => r.encounter) : [];
 });
 
 const equipmentColumns = computed(() => {
@@ -276,8 +281,8 @@ const getCharTalentBreakDown = (char: CharacterWithLogs) => {
       <q-tr>
         <q-th colspan="5" class="text-center text-bold">Roster</q-th>
         <q-th
-          v-if="roster.characters[0]?.logs"
-          :colspan="roster.characters[0].logs.rankings.length + 1"
+          v-if="encounterList.length"
+          :colspan="encounterList.length + 1"
           class="text-center text-bold"
         >
           Warcraft Logs
@@ -326,7 +331,7 @@ const getCharTalentBreakDown = (char: CharacterWithLogs) => {
       </q-td>
     </template>
     <template
-      v-for="encounter in roster.characters[0]?.logs?.rankings.map((r) => r.encounter)"
+      v-for="encounter in encounterList"
       :key="encounter.id"
       v-slot:[`body-cell-${encounter.name}`]="props"
     >
@@ -401,6 +406,6 @@ th > i {
 }
 
 .q-table--dense .q-table td {
-  padding: 2px
+  padding: 2px;
 }
 </style>

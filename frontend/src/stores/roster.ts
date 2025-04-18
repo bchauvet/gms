@@ -67,7 +67,7 @@ export const useRosterStore = defineStore('roster', () => {
     const WclChar = await WclApi.getCharLogs(realm, name);
     if (force) {
       logs.value.map((c) => (c.name === name && c.server.slug === realm ? WclChar : c));
-    } else {
+    } else if (WclChar) {
       logs.value.push(WclChar);
     }
     return WclChar.zoneRankings;

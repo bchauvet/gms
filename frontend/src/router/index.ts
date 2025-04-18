@@ -16,7 +16,7 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     const authStore = useAuthStore();
     const user = (await authStore.BnetAuth.getUser()) as BnetUser;
     if (!to.path.startsWith('/auth/') && !user) {
-      return { name: 'Login' };
+      return { name: 'Login', query: { redirect: to.fullPath } };
     } else {
       authStore.setUpBnetUser(user);
     }

@@ -18,7 +18,7 @@ export declare interface encounterRanking {
 export declare interface WclCharacter {
   id: number;
   name: string;
-  guildTank: number;
+  guildRank: number;
   server: {
     id: number;
     name: string;
