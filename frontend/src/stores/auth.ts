@@ -18,12 +18,13 @@ export const useAuthStore = defineStore('auth', () => {
   const setUpBnetUser = (user: BnetUser) => {
     BnetAuthUser.value = user;
   };
-  const clearUserSession = () => {
+  const clearUserSession = async () => {
     BnetAuthUser.value = null;
+    await BnetAuth.removeUser();
   };
   const Logout = async () => {
     try {
-      clearUserSession();
+      await clearUserSession();
       await router.push({ name: 'Login' });
     } catch (error) {
       console.log(error);
@@ -39,7 +40,6 @@ export const useAuthStore = defineStore('auth', () => {
     () => BnetAuthUser.value,
     async () => {
       if (isLoogedIn.value) {
-        console.log("Fetching Bnet Accounts")
         await BnetApi.user
           .accounts()
           .then((resp) => (BnetAccount.value = resp.data.wow_accounts[0]));
@@ -48,7 +48,6 @@ export const useAuthStore = defineStore('auth', () => {
   );
 
   const initStore = async () => {
-    console.log("Init Store", BnetAuthUser.value)
     await WclApi.getToken.then((token) => (WclToken.value = token));
   };
 

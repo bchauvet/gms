@@ -1,7 +1,7 @@
 describe('Battle.net Callback', () => {
   it('should handle Battle.net callback', () => {
     // Mock the OAuth callback response
-    cy.intercept('GET', '/oauth/bnet*', {
+    cy.intercept('GET', '/auth/bnet*', {
       statusCode: 200,
       body: {
         // Mock response data
@@ -12,7 +12,7 @@ describe('Battle.net Callback', () => {
     }).as('oauthCallback');
 
     // Visit the callback URL with mock code
-    cy.visit('/oauth/bnet?code=mock-auth-code&state=mock-state');
+    cy.visit('/auth/bnet?code=mock-auth-code&state=mock-state');
 
     // Wait for the callback to be processed
     cy.wait('@oauthCallback');
@@ -23,7 +23,7 @@ describe('Battle.net Callback', () => {
 
   it('should handle error in callback', () => {
     // Visit the callback URL with error
-    cy.visit('/oauth/bnet?error=access_denied&error_description=User+denied+access');
+    cy.visit('/auth/bnet?error=access_denied&error_description=User+denied+access');
 
     // Should show error message
     cy.contains('Authentication Error').should('be.visible');

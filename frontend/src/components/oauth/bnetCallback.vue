@@ -14,7 +14,7 @@ onMounted(async () => {
       authStore.setUpBnetUser(user);
       await router.push({ name: 'Home' });
     } else {
-      authStore.clearUserSession();
+      await authStore.clearUserSession();
       await router.push({ name: 'Login' });
     }
   } catch (error) {

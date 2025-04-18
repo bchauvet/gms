@@ -2,10 +2,13 @@ import type { RouteRecordRaw } from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
   {
-    name: 'Login',
-    path: '/oauth/',
-    component: () => import('pages/LoginPage.vue'),
+    path: '/auth/',
     children: [
+      {
+        path: 'login',
+        name: 'Login',
+        component: () => import('pages/LoginPage.vue'),
+      },
       {
         path: 'bnet',
         name: 'BnetCallBack',

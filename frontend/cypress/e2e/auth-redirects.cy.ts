@@ -8,7 +8,7 @@ describe('Authentication Redirects', () => {
     cy.wait('@getUser');
 
     // Should be redirected to login page
-    cy.url().should('include', '/oauth/');
+    cy.url().should('include', '/auth/');
   });
 
   it('should redirect to login page when trying to access profile page without auth', () => {
@@ -20,7 +20,7 @@ describe('Authentication Redirects', () => {
     cy.wait('@getUser');
 
     // Should be redirected to login page
-    cy.url().should('include', '/oauth/');
+    cy.url().should('include', '/auth/');
   });
 
   it('should redirect to login page when trying to access roster page without auth', () => {
@@ -32,18 +32,18 @@ describe('Authentication Redirects', () => {
     cy.wait('@getUser');
 
     // Should be redirected to login page
-    cy.url().should('include', '/oauth/');
+    cy.url().should('include', '/auth/');
   });
 
-  it('should not redirect to login page when accessing oauth routes', () => {
+  it('should not redirect to login page when accessing auth routes', () => {
     // Mock unauthenticated user using custom command
     cy.mockUnauthenticatedUser();
 
     // Visit login page
-    cy.visit('/oauth/');
+    cy.visit('/auth/login');
 
     // Should stay on login page
-    cy.url().should('include', '/oauth/');
+    cy.url().should('include', '/auth/');
     cy.contains('Login').should('be.visible');
   });
 
@@ -53,7 +53,7 @@ describe('Authentication Redirects', () => {
 
     cy.visit('/');
     cy.wait('@getUser');
-    cy.url().should('include', '/oauth/');
+    cy.url().should('include', '/auth/');
 
     // Then mock successful authentication
     cy.mockAuthenticatedUser();
