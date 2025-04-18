@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { BnetAuth, BnetIcon } from 'src/services/index.js';
+import { BnetIcon, BnetAuth } from 'src/services/index.js';
 import { useAuthStore } from 'stores/auth';
 import { storeToRefs } from 'pinia';
 
 const authStore = useAuthStore();
-const { BnetToken } = storeToRefs(authStore);
+const { isLoogedIn, BnetProfile } = storeToRefs(authStore);
+const { Logout } = authStore;
 </script>
 
 <template>
@@ -14,13 +15,12 @@ const { BnetToken } = storeToRefs(authStore);
         <q-card>
           <q-card-section>
             <q-btn
-              v-if="!BnetToken"
               size="lg"
               unelevated
-              label="Login"
+              :label="isLoogedIn ? BnetProfile?.battletag : 'Battle.net Login'"
               color="primary"
               :icon="BnetIcon"
-              @click="BnetAuth.signinRedirect()"
+              @click="isLoogedIn ? Logout() : BnetAuth.signinRedirect()"
             />
           </q-card-section>
         </q-card>

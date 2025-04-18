@@ -2,6 +2,7 @@ import { defineRouter } from '#q-app/wrappers';
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from 'stores/auth';
 import routes from './routes';
+import { type BnetUser } from 'src/services';
 
 export default defineRouter(function (/* { store, ssrContext } */) {
   const createHistory = createWebHistory;
@@ -11,9 +12,14 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     routes: routes,
   });
 
-  Router.beforeEach((to) => {
+  Router.beforeEach(async (to) => {
     const authStore = useAuthStore();
-    if (!to.path.startsWith('/oauth') && !authStore.BnetToken) return { name: 'Login' };
+    const user = (await authStore.BnetAuth.getUser()) as BnetUser;
+    if (!to.path.startsWith('/oauth') && !user) {
+      return { name: 'Login' };
+    } else {
+      authStore.setUpBnetUser(user);
+    }
   });
 
   return Router;

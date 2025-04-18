@@ -7,11 +7,12 @@
         <div>
           <q-btn
             flat
-            v-if="authStore.BnetUserInfo"
+            v-if="isLoogedIn"
             :icon="BnetIcon"
-            :label="authStore.BnetUserInfo.battletag"
+            :label="BnetProfile?.battletag"
             :to="{ name: 'Profile' }"
           />
+          <q-btn flat icon="logout" @click="Logout()" />
         </div>
       </q-toolbar>
     </q-header>
@@ -25,10 +26,13 @@
 import { onMounted } from 'vue';
 import { useAuthStore } from 'stores/auth';
 import { BnetIcon } from 'src/services';
+import { storeToRefs } from 'pinia';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const authStore = useAuthStore();
+const { isLoogedIn, BnetProfile } = storeToRefs(authStore);
+const { Logout } = authStore;
 
 onMounted(async () => {
   await authStore.initStore();

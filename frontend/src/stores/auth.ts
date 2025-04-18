@@ -1,42 +1,71 @@
-import { defineStore } from 'pinia';
-import { ref, watch } from 'vue';
+import { defineStore, acceptHMRUpdate } from 'pinia';
+import { ref, watch, computed } from 'vue';
 import { LocalStorage } from 'quasar';
-import { type BnetUser, BnetApi, WclApi } from 'src/services/';
+import { type BnetUser, BnetApi, WclApi, BnetAuth } from 'src/services/';
+import { useRouter } from 'vue-router';
 
 type Nullable<T> = T | null;
 
 export const useAuthStore = defineStore('auth', () => {
-  const BnetToken = ref<Nullable<string>>(LocalStorage.getItem('bnet_token') || null);
-  const BnetUserInfo = ref<Nullable<BnetUser>>(LocalStorage.getItem('bnet_user') || null);
-  const BnetAccount = ref();
+  const isLoogedIn = computed(() => !!BnetAuthUser.value);
   const WclToken = ref<Nullable<string>>(LocalStorage.getItem('wcl_token') || null);
+  const BnetAuthUser = ref<BnetUser | null>(null);
+  const BnetToken = computed(() => BnetAuthUser.value?.access_token ?? '');
+  const BnetProfile = computed(() => BnetAuthUser.value?.profile ?? null);
+  const BnetAccount = ref();
+  const router = useRouter();
 
-  watch(
-    () => BnetToken.value,
-    () => LocalStorage.set('bnet_token', BnetToken.value),
-  );
-
-  watch(
-    () => BnetUserInfo.value,
-    () => LocalStorage.set('bnet_user', BnetUserInfo.value),
-  );
+  const setUpBnetUser = (user: BnetUser) => {
+    BnetAuthUser.value = user;
+  };
+  const clearUserSession = () => {
+    BnetAuthUser.value = null;
+  };
+  const Logout = async () => {
+    try {
+      clearUserSession();
+      await router.push({ name: 'Login' });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   watch(
     () => WclToken.value,
     (value) => LocalStorage.set('wcl_token', value),
   );
 
+  watch(
+    () => BnetAuthUser.value,
+    async () => {
+      if (isLoogedIn.value) {
+        console.log("Fetching Bnet Accounts")
+        await BnetApi.user
+          .accounts()
+          .then((resp) => (BnetAccount.value = resp.data.wow_accounts[0]));
+      }
+    },
+  );
+
   const initStore = async () => {
-    await BnetApi.user.info().then((resp) => (BnetUserInfo.value = resp.data));
-    await BnetApi.user.accounts().then((resp) => (BnetAccount.value = resp.data.wow_accounts[0]));
+    console.log("Init Store", BnetAuthUser.value)
     await WclApi.getToken.then((token) => (WclToken.value = token));
   };
 
   return {
-    BnetUserInfo,
+    isLoogedIn,
+    BnetAuth,
     BnetToken,
+    BnetProfile,
     BnetAccount,
     WclToken,
     initStore,
+    setUpBnetUser,
+    clearUserSession,
+    Logout,
   };
 });
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useAuthStore, import.meta.hot));
+}

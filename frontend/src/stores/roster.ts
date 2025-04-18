@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia';
+import { acceptHMRUpdate, defineStore } from 'pinia';
 import { BnetApi, type Character, WclApi, type WclCharacter, charClasses } from 'src/services/';
 import { ref, computed, watch } from 'vue';
 import { LocalStorage } from 'quasar';
@@ -24,9 +24,8 @@ export const useRosterStore = defineStore('roster', () => {
 
   const getSpecIcon = computed(
     () => (class_id: number, spec: string) =>
-      charClasses
-        .find((cls) => cls.id === class_id)
-        ?.specializations?.find((s) => s.name === spec)?.icon,
+      charClasses.find((cls) => cls.id === class_id)?.specializations?.find((s) => s.name === spec)
+        ?.icon,
   );
 
   const getCharacter = async (realm: string, name: string, force = false) => {
@@ -95,3 +94,7 @@ export const useRosterStore = defineStore('roster', () => {
     getCharacterLogs,
   };
 });
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useRosterStore, import.meta.hot));
+}
