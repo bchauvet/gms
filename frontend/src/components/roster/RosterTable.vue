@@ -5,6 +5,7 @@ import { indexOf, sortBy } from 'lodash';
 import { computed, ref } from 'vue';
 import { charClasses } from 'src/services';
 import EquippedItemIcon from 'components/EquippedItemIcon.vue';
+import GemsRecap from 'components/GemsRecap.vue';
 
 const rosterStore = useRosterStore();
 
@@ -218,6 +219,11 @@ const getCharTalentBreakDown = (char: CharacterWithLogs) => {
         align: 'center',
       },
       ...logColumns,
+      {
+        name: 'gems',
+        label: 'Gemmes',
+        field: (row) => row,
+      },
       ...equipmentColumns,
     ]"
   >
@@ -259,7 +265,7 @@ const getCharTalentBreakDown = (char: CharacterWithLogs) => {
         >
           Warcraft Logs (R{{ roster.raid_size }})
         </q-th>
-        <q-th :colspan="equipmentColumns.length" class="text-center text-bold">
+        <q-th :colspan="equipmentColumns.length + 1" class="text-center text-bold">
           Equipement
           <q-toggle v-model="displayOffhand" />
         </q-th>
@@ -331,6 +337,11 @@ const getCharTalentBreakDown = (char: CharacterWithLogs) => {
         <div class="text-center">
           <EquippedItemIcon v-if="props.value" :item="getItemBySlot(props.row.id, itemSlot)!" />
         </div>
+      </q-td>
+    </template>
+    <template #body-cell-gems="props">
+      <q-td class="text-center">
+        <GemsRecap :character="props.row" />
       </q-td>
     </template>
     <template #bottom-row>
