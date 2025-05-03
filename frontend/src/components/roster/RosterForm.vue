@@ -1,14 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
-import {
-  BnetApi,
-  BnetIcon,
-  type Character,
-  type Member,
-  type Realm,
-  charClasses,
-} from 'src/services';
+import { BnetApi, BnetIcon, type Character, type Member, type Realm } from 'src/services';
 import { sortBy } from 'lodash';
+import CharacterList from 'components/CharacterList.vue';
 
 const regionOptions = [
   { label: 'Classic Europe', namespace: 'classic-eu', id: 43 },
@@ -22,7 +16,7 @@ const guild = ref('');
 const results = ref<Character[]>([]);
 const error = ref(false);
 
-defineModel<Character[]>('members', { required: true });
+const members = defineModel<Character[]>('members', { required: true });
 
 onMounted(async () => {
   realmOptions.value = await BnetApi.realm.list(region.value!.namespace);
@@ -66,9 +60,7 @@ watch(
         .then(
           (resp) =>
             (results.value = sortBy(
-              resp.data.members
-                .map((m: Member) => m.character)
-                .filter((c: Member['character']) => c.level >= 80),
+              resp.data.members.map((m: Member) => m.character),
               'level',
             ).reverse()),
         )
@@ -136,64 +128,7 @@ watch(
           style="width: 50%"
         />
       </div>
-      <q-table
-        v-if="results.length"
-        :rows="results"
-        dense
-        flat
-        bordered
-        :rows-per-page-options="[20, 30, 40, 50]"
-        :pagination="{ rowsPerPage: 20 }"
-        separator="cell"
-        :columns="[
-          {
-            name: 'name',
-            label: 'Personnage',
-            field: 'name',
-            align: 'center',
-            sortable: true,
-          },
-          {
-            name: 'level',
-            label: 'Level',
-            field: 'level',
-            align: 'center',
-            sortable: true,
-          },
-          {
-            name: 'character_class',
-            label: 'Classe',
-            field: (row) => row.playable_class?.id || row.character_class?.id,
-            align: 'center',
-            sortable: true,
-          },
-          {
-            name: 'action',
-            label: '',
-            field: 'id',
-          },
-        ]"
-      >
-        <template #body-cell-character_class="props">
-          <q-td class="text-center">
-            <q-img width="1.5rem" :src="charClasses.find((c) => c.id == props.value)?.icon" />
-          </q-td>
-        </template>
-        <template #body-cell-action="props">
-          <q-td class="text-center">
-            <q-badge color="green" v-if="members.map((m) => m.id).includes(props.row.id)">Inclus</q-badge>
-            <q-btn
-              v-else
-              size="sm"
-              dense
-              icon="add"
-              flat
-              padding="xs"
-              @click="members.push(props.row)"
-            />
-          </q-td>
-        </template>
-      </q-table>
+      <CharacterList :characters="results" :members="members" />
     </q-card-section>
   </q-card>
 </template>
