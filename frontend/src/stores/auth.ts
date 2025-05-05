@@ -7,14 +7,17 @@ import { useRouter } from 'vue-router';
 type Nullable<T> = T | null;
 
 export const useAuthStore = defineStore('auth', () => {
-  const isLoogedIn = computed(() => !!BnetAuthUser.value);
   const WclToken = ref<Nullable<string>>(LocalStorage.getItem('wcl_token') || null);
   const BnetAuthUser = ref<BnetUser | null>(null);
-  const BnetToken = computed(() => BnetAuthUser.value?.access_token ?? '');
-  const BnetProfile = computed(() => BnetAuthUser.value?.profile ?? null);
   const BnetAccount = ref();
   const router = useRouter();
 
+  // Getters
+  const isLoogedIn = computed(() => !!BnetAuthUser.value);
+  const BnetToken = computed(() => BnetAuthUser.value?.access_token ?? '');
+  const BnetProfile = computed(() => BnetAuthUser.value?.profile ?? null);
+
+  // Methods
   const setUpBnetUser = (user: BnetUser) => {
     BnetAuthUser.value = user;
   };

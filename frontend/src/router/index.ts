@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from 'stores/auth';
 import routes from './routes';
 import { type BnetUser } from 'src/services';
+import { LocalStorage } from 'quasar';
 
 export default defineRouter(function (/* { store, ssrContext } */) {
   const createHistory = createWebHistory;
@@ -17,7 +18,11 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     const user = (await authStore.BnetAuth.getUser()) as BnetUser;
     if (!to.path.startsWith('/auth/') && !user) {
       return { name: 'Login', query: { redirect: to.fullPath } };
-    } else {
+    } else if (user) {
+      if (user.expires_at! * 1000 < Date.now() && !to.path.startsWith('/auth/')) {
+        LocalStorage.set('rms:redirect', to.fullPath);
+        await authStore.BnetAuth.signinRedirect();
+      }
       authStore.setUpBnetUser(user);
     }
   });
