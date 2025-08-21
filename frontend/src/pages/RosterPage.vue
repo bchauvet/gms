@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import { useRosterStore, type CharacterWithLogs } from 'stores/roster';
+import { type CharacterWithLogs, useRosterStore } from 'stores/roster';
 import { sortBy, uniqBy } from 'lodash';
 import RosterTable from 'components/roster/RosterTable.vue';
 import { useRoute } from 'vue-router';
@@ -11,33 +11,28 @@ const rosterStore = useRosterStore();
 
 const charNames = ref<string[]>(
   (route.query.char as string)?.split(',') || [
-    'Masakek',
     'Darkstarky',
-    'Medà',
-    'Médà',
-    'Hykø',
-    'Azzallée',
-    'Diwood',
-    'Jrmoug',
-    'Jrmoux',
-    'Palatare',
-    'Razaquel',
-    'Óhlly',
-    'Alatare',
-    'Azestra',
-    'Biltouilleuh',
-    'Daronneaza',
+    'Azaløl',
+    'Charlenriz',
     'Føxdust',
-    'Méda',
-    'Hølly',
-    'Gayolas',
-    'Lightstarky',
+    'Diwpal',
+    'Jrmoug',
+    'Alataré',
+    'Medaladin',
+    'Harkanoss',
+    'Razaquel',
+    'Masakek',
+    'Palatare',
+    'Diwood',
+    'Broxîg',
+    'Ohlly',
+    'Medamonk',
   ],
 );
 const size = ref(
   route.query.size && [10, 25].includes(Number(route.query.size)) ? Number(route.query.size) : 10,
 );
-const server_slug = ref((route.query.server as string) || 'sulfuron');
+const server_slug = ref((route.query.server as string) || 'auberdine');
 const rosterName = ref((route.query.name as string) || 'INSU');
 
 onMounted(async () => {
@@ -62,4 +57,88 @@ const displayed_characters = computed<CharacterWithLogs[]>(() => {
 
 <template>
   <RosterTable :roster="{ name: rosterName, raid_size: size, characters: displayed_characters }" />
+  <div class="text-center q-pa-lg">
+    <q-btn
+      color="secondary"
+      label="Roster MOP"
+      class="q-ml-lg"
+      :href="
+        '?server=auberdine&char=' +
+        [
+          'Darkstarky',
+          'Azaløl',
+          'Charlenriz',
+          'Føxdust',
+          'Diwpal',
+          'Jrmoug',
+          'Alataré',
+          'Medaladin',
+          'Harkanoss',
+          'Razaquel',
+          'Masakek',
+          'Broxîg',
+          'Ohlly',
+          'Øhlly'
+        ].join(',')
+      "
+    />
+    <q-btn
+      color="secondary"
+      label="Roster YQF"
+      class="q-ml-lg"
+      :href="
+        '?server=auberdine&char=' +
+        [
+          'Ttpz',
+          'Wazaabtw',
+          'Logõsh',
+          'Cärm',
+          'Modimort',
+          'Sneekx',
+          'Touquy',
+          'Mandalozå',
+          'Jrmz',
+        ].join(',')
+      "
+    />
+    <q-btn
+      color="secondary"
+      label="R25"
+      class="q-ml-lg"
+      :href="
+        '?server=auberdine&char=' +
+        [
+          'Darkstarky',
+          'Ttpz',
+          'Medaladin',
+          'Azaløl',
+          'Sneekx',
+
+          'Modimort',
+          'Fölïa',
+          'Logõsh',
+          'Jrmoug',
+          'Ohlly',
+
+          'Masakek',
+          'Hamsterhunt',
+          'Cärm',
+          'Føxdust',
+          'Jrmz',
+
+          'Wazaabtw',
+          'Alataré',
+          'Charlenriz',
+          'Touquy',
+          'Vazÿ',
+
+          'Diwpal',
+          'Mandalozå',
+          'Gifflesun',
+          'Broxîg',
+          'Vokä'
+        ].join(',')
+      "
+    />
+  </div>
 </template>

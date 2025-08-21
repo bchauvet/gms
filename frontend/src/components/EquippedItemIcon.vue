@@ -41,10 +41,21 @@ const getItemIcon = computed(() => {
 
 <template>
   <a
-    :href="`https://www.wowhead.com/cata/item=${equippedItem.item.id}`"
+    :href="`https://www.wowhead.com/mop-classic/item=${equippedItem.item.id}`"
     target="_blank"
     :data-wowhead="`gems=${getItemGemIds}&ench=${getItemEnchantmentIds}&pcs=${getSetItemIds}`"
   >
-    <q-img width="2.5rem" :src="'https://wow.zamimg.com/images/wow/icons/large/' + getItemIcon" />
+    <q-img width="2.4rem" :src="'https://wow.zamimg.com/images/wow/icons/large/' + getItemIcon">
+      <div
+        class="absolute-bottom text-center text-bold"
+        style="
+          font-size: 0.75rem;
+          padding: 0;
+          color: rgb(255, 209, 0);
+        "
+      >
+        {{ equippedItem.item.level }}
+      </div>
+    </q-img>
   </a>
 </template>

@@ -1,8 +1,8 @@
 {
-  "name": "gms-frontend",
+  "name": "rms-frontend",
   "version": "0.0.1",
   "description": "Guild Management System",
-  "productName": "GMS App",
+  "productName": "RMS App",
   "author": "Benoit CHAUVET <benoit.chauvet@albc.fr>",
   "type": "module",
   "private": true,

@@ -1,6 +1,6 @@
-# GMS App (gms-frontend)
+# RMS App (rms-frontend)
 
-Guild Management System
+Roster Management System
 
 ## Install the dependencies
 ```bash

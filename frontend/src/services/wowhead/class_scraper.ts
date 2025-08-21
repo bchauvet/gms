@@ -85,6 +85,7 @@ const classNames = [
   'Shaman',
   'Warlock',
   'Warrior',
+  'Monk'
 ];
 
 const data = [];

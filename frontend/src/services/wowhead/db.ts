@@ -1,48 +1,6 @@
 import { default as charClasses } from 'src/services/wowhead/wow_classes.json' with { type: 'json' };
 
-const itemSlots = [
-  'HEAD',
-  'NECK',
-  'SHOULDER',
-  'BACK',
-  'CHEST',
-  'WRIST',
-  'HANDS',
-  'WAIST',
-  'LEGS',
-  'FEET',
-  'FINGER_1',
-  'FINGER_2',
-  'TRINKET_1',
-  'TRINKET_2',
-  'MAIN_HAND',
-  'OFF_HAND',
-  'RANGED',
-];
-
-const rankColors = {
-  astounding: '#e268a8',
-  legendary: '#ff8000',
-  epic: '#a335ee',
-  rare: '#0070ff',
-  uncommon: '#1eff00',
-  common: '#666',
-};
-
-const getRankColor = (value: number, max = 100) =>
-  value / max >= 0.99
-    ? rankColors.astounding
-    : value / max >= 0.95
-      ? rankColors.legendary
-      : value / max >= 0.75
-        ? rankColors.epic
-        : value / max >= 0.5
-          ? rankColors.rare
-          : value / max >= 0.25
-            ? rankColors.uncommon
-            : rankColors.common;
-
-const gems = {
+const gems_cata = {
   // https://www.wowhead.com/cata/items/gems/min-level:85/max-level:85/quality:3:4/type:6
   meta: [
     68780, 68778, 68779, 52303, 52296, 52294, 52293, 52302, 52299, 52289, 52295, 52291, 52300,
@@ -67,4 +25,24 @@ const gems = {
   ],
 };
 
-export { itemSlots, rankColors, getRankColor, charClasses, gems };
+const gems = {
+  // https://www.wowhead.com/mop-classic/items/gems/min-level:90/max-level:90/quality:3:4/type:6
+  meta: [
+    76132, 76885, 76886, 76884, 76895, 76890, 76888, 76891, 95348, 76879, 76896, 76887, 76894,
+    76897, 76892, 76893, 97534, 97937, 97306,
+  ],
+  rare: [
+    76132, 76885, 76886, 76884, 76895, 76890, 76888, 76891, 76879, 76896, 76887, 76894, 76897,
+    76892, 76893, 97534, 97937, 97306,
+  ],
+  epic: [
+    83150, 83151, 83141, 83142, 83146, 83148, 83147, 83152, 83144, 83143, 93405, 88944, 93410,
+    83149, 93409, 88934, 88952, 93406, 88962, 88956, 88937, 88947, 83145, 88943, 88939, 93408,
+    88919, 88925, 88926, 88932, 88950, 93404, 88913, 88917, 88918, 88921, 88960, 88914, 88915,
+    88928, 88936, 88987, 88911, 88912, 88920, 88927, 88930, 88963, 93708, 88916, 88924, 88946,
+    88949, 88953, 88954, 88961, 88922, 88923, 88933, 88935, 88940, 89677, 89681, 76714, 88931,
+    88938, 88941, 88942, 88945, 88948, 88951, 88955, 88958, 88959,
+  ],
+};
+
+export { charClasses, gems, gems_cata };

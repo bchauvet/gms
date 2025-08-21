@@ -11,7 +11,6 @@ const HTTP = axios.create({
 
 const authInterceptor = (config: InternalAxiosRequestConfig) => {
   const authStore = useAuthStore();
-  if (config.url) config.url = config.url.toLowerCase();
   if (authStore.BnetToken) config.headers.Authorization = `Bearer ${authStore.BnetToken}`;
   else config.withCredentials = false;
   return config;
@@ -69,31 +68,42 @@ const api = {
         })
         .then<Realm[]>((resp) => resp.data.results.map((r: SearchResult<Realm>) => r.data)),
   },
-  class: {
-    get_icon: (id: number) =>
-      gd.get(`media/playable-class/${id}`).then((resp) => resp.data.assets[0].value),
-    list: () => gd.get('playable-class/index'),
-  },
   guild: {
     get: (realm: string, name: string) =>
-      gd.get(`guild/${realm}/${name}`, { params: { namespace: 'profile-classic-eu' } }),
+      gd.get(`guild/${realm.toLowerCase()}/${name.toLowerCase()}`, {
+        params: { namespace: 'profile-classic-eu' },
+      }),
     roster: (realm: string, name: string) =>
-      gd.get(`guild/${realm}/${name}/roster`, { params: { namespace: 'profile-classic-eu' } }),
+      gd.get(`guild/${realm.toLowerCase()}/${name.toLowerCase()}/roster`, {
+        params: { namespace: 'profile-classic-eu' },
+      }),
   },
   character: {
     get: (realm: string, name: string, cache = true) =>
-      pd.get(`character/${realm}/${name}${cache ? '' : '?t=' + Date.now()}`),
+      pd.get(
+        `character/${realm.toLowerCase()}/${name.toLowerCase()}${cache ? '' : '?t=' + Date.now()}`,
+      ),
     getEquipment: (realm: string, name: string, cache = true) =>
       pd
-        .get(`character/${realm}/${name}/equipment${cache ? '' : '?t=' + Date.now()}`)
+        .get(
+          `character/${realm.toLowerCase()}/${name.toLowerCase()}/equipment${cache ? '' : '?t=' + Date.now()}`,
+        )
         .then<EquippedItem[]>((resp) => resp.data.equipped_items),
     getSpec: (realm: string, name: string, cache = true) =>
-      pd.get(`character/${realm}/${name}/specializations${cache ? '' : '?t=' + Date.now()}`).then<{
-        specialization_groups: Specialization[];
-      }>((resp) => resp.data),
+      pd
+        .get(
+          `character/${realm.toLowerCase()}/${name.toLowerCase()}/specializations${cache ? '' : '?t=' + Date.now()}`,
+        )
+        .then<{
+          specialization_groups: Specialization[];
+        }>((resp) => resp.data),
   },
   item: {
-    search: (ids: number[]) =>
+    search: (query: string) =>
+      gd
+        .get(`search/item${query}`)
+        .then<Item[]>((resp) => resp.data.results.map((i: SearchResult<Item>) => i.data)),
+    searchByIds: (ids: number[]) =>
       gd
         .get('search/item?id=' + ids.join('||'))
         .then<Item[]>((resp) => resp.data.results.map((i: SearchResult<Item>) => i.data)),

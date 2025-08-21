@@ -27,10 +27,5 @@ const gemsRecap = computed(() => {
 </script>
 
 <template>
-  <span>
-    {{ gemsRecap.count_epic }} / {{ gemsRecap.count_total }}
-    <q-tooltip>
-      <pre>{{ gemsRecap }}</pre>
-    </q-tooltip>
-  </span>
+  <span>{{ gemsRecap.count_epic }} / {{ gemsRecap.count_total }}</span>
 </template>

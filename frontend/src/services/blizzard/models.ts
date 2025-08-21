@@ -85,6 +85,10 @@ export declare interface Character {
   playable_race: {
     id: number;
   };
+  active_spec: {
+    id: number;
+    name: string;
+  }
   specializations: Specialization[];
   equipped_items: EquippedItem[];
   average_item_level?: number;
@@ -120,6 +124,9 @@ export declare interface Item {
   id: number;
   name?: string;
   level?: number;
+  quality?: {
+    type: string;
+  }
   media: {
     id: number;
     assets?: [{ value: string }];

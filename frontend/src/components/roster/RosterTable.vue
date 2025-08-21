@@ -1,16 +1,14 @@
 <script setup lang="ts">
-import { getRankColor, rankColors, itemSlots, type Item, type Specialization } from 'src/services';
+import { getRankColor, rankColors, itemSlots, type Item, itemSlotIcons } from 'src/services';
 import { useRosterStore, type Roster, type CharacterWithLogs } from 'stores/roster';
 import { indexOf, sortBy } from 'lodash';
-import { computed, ref } from 'vue';
-import { charClasses } from 'src/services';
+import { computed } from 'vue';
 import EquippedItemIcon from 'components/EquippedItemIcon.vue';
 import GemsRecap from 'components/GemsRecap.vue';
 
 const rosterStore = useRosterStore();
 
 const roster = defineModel<Roster>('roster', { required: true });
-const displayOffhand = ref(false);
 
 const getItemBySlot = (char_id: number, slot: string) => {
   return roster.value.characters
@@ -24,25 +22,29 @@ const forceRefresh = async (realm: string, name: string) => {
 };
 
 const getCharacterSpec = (char: CharacterWithLogs) => {
-  let spec = null;
-  if (char.specializations?.length) {
-    spec = sortBy(
-      char.specializations
-        .find((s: Specialization) => s.is_active)
-        ?.specializations?.map((tree) => ({
-          spec: tree.specialization_name,
-          points: tree.spent_points,
-        })),
-      'points',
-    ).pop()?.spec;
-  }
   return {
-    name: spec,
-    icon:
-      spec && !!char.character_class
-        ? rosterStore.getSpecIcon(char.character_class.id, spec)
-        : undefined,
+    name: char.active_spec.name,
+    icon: rosterStore.getSpecIcon(char.character_class!.id, char.active_spec.name),
   };
+  // let spec = char.active_spec;
+  // if (char.specializations?.length) {
+  //   spec = sortBy(
+  //     char.specializations
+  //       .find((s: Specialization) => s.is_active)
+  //       ?.specializations?.map((tree) => ({
+  //         spec: tree.specialization_name,
+  //         points: tree.spent_points,
+  //       })),
+  //     'points',
+  //   ).pop()?.spec;
+  // }
+  // return {
+  //   name: spec,
+  //   icon:
+  //     spec && !!char.character_class
+  //       ? rosterStore.getSpecIcon(char.character_class.id, spec)
+  //       : undefined,
+  // };
 };
 
 const encounterList = computed(() => {
@@ -67,7 +69,9 @@ const logColumns = computed(() => {
           name: e.name,
           label: e.name,
           field: (row: CharacterWithLogs) =>
-            Math.floor(row.logs?.rankings.find((l) => l.encounter.id === e.id)?.rankPercent ?? 0),
+            Math.floor(
+              (row.logs?.rankings.find((l) => l.encounter.id === e.id)?.rankPercent ?? 0) * 10,
+            ) / 10,
           sortable: true,
           sortOrder: 'da' as 'da' | 'ad',
           align: 'center' as 'left' | 'right' | 'center',
@@ -80,18 +84,16 @@ const logColumns = computed(() => {
 });
 
 const equipmentColumns = computed(() => {
-  return itemSlots
-    .filter((s) => displayOffhand.value || !['OFF_HAND', 'RANGED'].includes(s))
-    .map((slotType) => ({
-      name: slotType,
-      label: slotType,
-      field: (row: CharacterWithLogs) => getItemBySlot(row.id, slotType)?.item,
-      sortable: true,
-      align: 'center' as 'left' | 'right' | 'center',
-      sort: (a: Item, b: Item) =>
-        sortBy([a, b], ['level', 'id']).indexOf(a) - sortBy([a, b], ['level', 'id']).indexOf(b),
-      sortOrder: 'da' as 'da' | 'ad',
-    }));
+  return itemSlots.map((slotType) => ({
+    name: slotType,
+    label: slotType,
+    field: (row: CharacterWithLogs) => getItemBySlot(row.id, slotType)?.item,
+    sortable: true,
+    align: 'center' as 'left' | 'right' | 'center',
+    sort: (a: Item, b: Item) =>
+      sortBy([a, b], ['level', 'id']).indexOf(a) - sortBy([a, b], ['level', 'id']).indexOf(b),
+    sortOrder: 'da' as 'da' | 'ad',
+  }));
 });
 
 const charLogUrl = (char: CharacterWithLogs, size?: number, encounter?: number) => {
@@ -103,75 +105,102 @@ const charLogUrl = (char: CharacterWithLogs, size?: number, encounter?: number) 
   return url;
 };
 
-function removeZerosAfterLastPositive(arr: number[]) {
-  if (arr.some((v) => v > 0)) {
-    let lastPositiveIndex = 0;
-    for (let i = 0; i < arr.length; i++) {
-      if (arr[i]! > 0) {
-        lastPositiveIndex = i;
-      }
-    }
-    return arr.slice(0, lastPositiveIndex + 1);
-  } else {
-    return [];
-  }
-}
+// function removeZerosAfterLastPositive(arr: number[]) {
+//   if (arr.some((v) => v > 0)) {
+//     let lastPositiveIndex = 0;
+//     for (let i = 0; i < arr.length; i++) {
+//       if (arr[i]! > 0) {
+//         lastPositiveIndex = i;
+//       }
+//     }
+//     return arr.slice(0, lastPositiveIndex + 1);
+//   } else {
+//     return [];
+//   }
+// }
 
-function cleanSpellName(spell_name: string) {
-  const _result = spell_name
-    .replaceAll(' ', '-')
-    .replaceAll("'", '')
-    .replaceAll(':', '')
-    .replaceAll('!', '')
-    .replaceAll('.', '-')
-    .replaceAll('--', '-')
-    .toLowerCase();
-  return _result.endsWith('-') ? _result.slice(0, -1) : _result;
-}
+// function cleanSpellName(spell_name: string) {
+//   const _result = spell_name
+//     .replaceAll(' ', '-')
+//     .replaceAll("'", '')
+//     .replaceAll(':', '')
+//     .replaceAll('!', '')
+//     .replaceAll('.', '-')
+//     .replaceAll('--', '-')
+//     .toLowerCase();
+//   return _result.endsWith('-') ? _result.slice(0, -1) : _result;
+// }
 
-const ctcUrl = (char: CharacterWithLogs) => {
-  const _charTalent = char.specializations
-    .find((s) => s.is_active)
-    ?.specializations.map((spe) =>
-      spe.talents.map((t) => ({
-        spell: cleanSpellName(t.spell_tooltip.spell.name),
-        points: t.talent_rank,
-      })),
-    )
-    .flat();
-  const _talentStr = charClasses
-    .find((cls) => cls.id === char?.character_class?.id)
-    ?.specializations.map((s) =>
-      removeZerosAfterLastPositive(
-        sortBy(s.talents, ['row', 'col']).map(
-          (t) => _charTalent?.find((k) => k.spell === t.name)?.points || 0,
-        ),
-      ).join(''),
-    )
-    .join('-');
-  const _className = char.character_class?.name.toLowerCase().replaceAll(' ', '-');
-  return `https://cata.wowhead.com/talent-calc/${_className}/${_talentStr}`;
+// const ctcUrl = (char: CharacterWithLogs) => {
+//   const _charTalent = char.specializations
+//     .find((s) => s.is_active)
+//     ?.specializations.map((spe) =>
+//       spe.talents.map((t) => ({
+//         spell: cleanSpellName(t.spell_tooltip.spell.name),
+//         points: t.talent_rank,
+//       })),
+//     )
+//     .flat();
+//   const _talentStr = charClasses
+//     .find((cls) => cls.id === char?.character_class?.id)
+//     ?.specializations.map((s) =>
+//       removeZerosAfterLastPositive(
+//         sortBy(s.talents, ['row', 'col']).map(
+//           (t) => _charTalent?.find((k) => k.spell === t.name)?.points || 0,
+//         ),
+//       ).join(''),
+//     )
+//     .join('-');
+//   const _className = char.character_class?.name.toLowerCase().replaceAll(' ', '-');
+//   return `https://cata.wowhead.com/talent-calc/${_className}/${_talentStr}`;
+// };
+
+// const getCharTalentBreakDown = (char: CharacterWithLogs) => {
+//   const _charTalent = char.specializations
+//     .find((s) => s.is_active)
+//     ?.specializations.map((spe) =>
+//       spe.talents.map((t) => ({
+//         spell: cleanSpellName(t.spell_tooltip.spell.name),
+//         points: t.talent_rank,
+//       })),
+//     )
+//     .flat();
+//   return charClasses
+//     .find((cls) => cls.id === char?.character_class?.id)
+//     ?.specializations.map((s) =>
+//       sortBy(s.talents, ['row', 'col'])
+//         .map((t) => _charTalent?.find((k) => k.spell === t.name)?.points || 0)
+//         .reduce((acc, cur) => acc + cur, 0),
+//     )
+//     .join('/');
+// };
+
+// const isBisItem = (item: Item, char: CharacterWithLogs) => {
+//   const _spec = getCharacterSpec(char);
+//   return !!bisList.find((s) => s.spec === _spec.name)?.items.includes(item.id);
+// };
+
+const getiLvLColor = (level: number | undefined) => {
+  if (!level) return 'none';
+  return level >= 502
+    ? rankColors.legendary
+    : level >= 489
+      ? rankColors.astounding
+      : level >= 476
+        ? rankColors.epic
+        : level >= 463
+          ? rankColors.rare
+          : rankColors.uncommon;
 };
 
-const getCharTalentBreakDown = (char: CharacterWithLogs) => {
-  const _charTalent = char.specializations
-    .find((s) => s.is_active)
-    ?.specializations.map((spe) =>
-      spe.talents.map((t) => ({
-        spell: cleanSpellName(t.spell_tooltip.spell.name),
-        points: t.talent_rank,
-      })),
-    )
-    .flat();
-  return charClasses
-    .find((cls) => cls.id === char?.character_class?.id)
-    ?.specializations.map((s) =>
-      sortBy(s.talents, ['row', 'col'])
-        .map((t) => _charTalent?.find((k) => k.spell === t.name)?.points || 0)
-        .reduce((acc, cur) => acc + cur, 0),
-    )
-    .join('/');
-};
+// const bisPercent = (char: CharacterWithLogs) => {
+//   const _spec = getCharacterSpec(char).name;
+//   const _bis = bisList.find((s) => s.spec === _spec)?.items || [];
+//   const _equippedItems = char.equipped_items.map((eqItem) => eqItem.item.id);
+//   return Math.round(
+//     (100 * _equippedItems.filter((id) => _bis.includes(id)).length) / _equippedItems.length,
+//   );
+// };
 </script>
 
 <template>
@@ -220,11 +249,18 @@ const getCharTalentBreakDown = (char: CharacterWithLogs) => {
         align: 'center',
       },
       ...logColumns,
-      {
-        name: 'gems',
-        label: 'Gemmes',
-        field: (row) => row,
-      },
+      // {
+      //   name: 'gems',
+      //   label: 'Gemmes',
+      //   field: (row) => row,
+      // },
+      // {
+      //   name: 'equipment_progress',
+      //   label: 'BiS (%)',
+      //   align: 'center',
+      //   sortable: true,
+      //   field: (row) => bisPercent(row),
+      // },
       ...equipmentColumns,
     ]"
   >
@@ -266,14 +302,20 @@ const getCharTalentBreakDown = (char: CharacterWithLogs) => {
         >
           Warcraft Logs (R{{ roster.raid_size }})
         </q-th>
-        <q-th :colspan="equipmentColumns.length + 1" class="text-center text-bold">
+        <q-th :colspan="equipmentColumns.length + 2" class="text-center text-bold">
           Equipement
-          <q-toggle v-model="displayOffhand" />
         </q-th>
       </q-tr>
       <q-tr :props="props">
         <q-th v-for="col in props.cols" :key="col.name" :props="props">
-          {{ col.label }}
+          <q-img
+            v-if="col.label && Object.keys(itemSlotIcons).includes(col.label)"
+            :title="col.label"
+            width="3rem"
+            style="opacity: 0.8"
+            :src="itemSlotIcons[col.label as keyof typeof itemSlotIcons]"
+          />
+          <span v-else>{{ col.label }}</span>
         </q-th>
       </q-tr>
     </template>
@@ -290,17 +332,12 @@ const getCharTalentBreakDown = (char: CharacterWithLogs) => {
     </template>
     <template v-slot:body-cell-class="props">
       <q-td class="text-center">
-        <a
-          v-if="props.value && getCharacterSpec(props.row).icon"
-          :href="ctcUrl(props.row)"
-          target="_blank"
-        >
+        <a v-if="props.value && getCharacterSpec(props.row).icon" target="_blank">
           <q-img
             width="2rem"
             :title="getCharacterSpec(props.row).name"
             :src="getCharacterSpec(props.row).icon"
           />
-          <span style="font-size: 0.8rem"><br />{{ getCharTalentBreakDown(props.row) }}</span>
         </a>
         <q-img v-else-if="props.value" width="2rem" :src="rosterStore.getClassIcon(props.value)" />
       </q-td>
@@ -328,14 +365,8 @@ const getCharTalentBreakDown = (char: CharacterWithLogs) => {
       v-slot:[`body-cell-${itemSlot}`]="props"
       :key="itemSlot"
     >
-      <q-td
-        :class="
-          props.value
-            ? `${props.value.quality.type == 'LEGENDARY' || props.value.level >= 410 ? 'bg-green-3' : props.value.level >= 397 ? 'bg-yellow-3' : props.value.level < 384 ? 'bg-red-3' : ''}`
-            : ''
-        "
-      >
-        <div class="text-center">
+      <q-td :style="'background-color:' + getiLvLColor(props.value?.level)">
+        <div class="text-center" v-if="props.value">
           <EquippedItemIcon v-if="props.value" :item="getItemBySlot(props.row.id, itemSlot)!" />
         </div>
       </q-td>

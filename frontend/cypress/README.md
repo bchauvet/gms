@@ -1,6 +1,6 @@
-# Cypress Tests for GMS Frontend
+# Cypress Tests for RMS Frontend
 
-This directory contains end-to-end tests for the GMS Frontend application using Cypress.
+This directory contains end-to-end tests for the RMS Frontend application using Cypress.
 
 ## Test Structure
 

@@ -846,5 +846,33 @@
         ]
       }
     ]
+  },
+  {
+    "id": 10,
+    "icon": "https://wow.zamimg.com/images/wow/icons/medium/class_monk.jpg",
+    "name": "Monk",
+    "specializations": [
+      {
+        "name": "Brewmaster",
+        "icon": "https://wow.zamimg.com/images/wow/icons/medium/spell_monk_brewmaster_spec.jpg",
+        "talents": [
+          { "row": 0, "col": 1, "spell": 48962, "name": "virulence" }
+        ]
+      },
+      {
+        "name": "Mistweaver",
+        "icon": "https://wow.zamimg.com/images/wow/icons/medium/spell_monk_mistweaver_spec.jpg",
+        "talents": [
+          { "row": 0, "col": 1, "spell": 48962, "name": "virulence" }
+        ]
+      },
+      {
+        "name": "Windwalker",
+        "icon": "https://wow.zamimg.com/images/wow/icons/medium/spell_monk_windwalker_spec.jpg",
+        "talents": [
+          { "row": 0, "col": 1, "spell": 48962, "name": "virulence" }
+        ]
+      }
+    ]
   }
 ]

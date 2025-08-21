@@ -21,7 +21,7 @@ const members = defineModel<Character[]>('members', { required: true });
 onMounted(async () => {
   realmOptions.value = await BnetApi.realm.list(region.value!.namespace);
   realmOptions.value = realmOptions.value.filter((r) => !RegExp(/\d/).test(r.slug));
-  realm.value = realmOptions.value.find((r) => r.slug === 'sulfuron');
+  realm.value = realmOptions.value.find((r) => r.slug === 'auberdine');
 });
 
 watch(

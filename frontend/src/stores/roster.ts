@@ -37,7 +37,7 @@ export const useRosterStore = defineStore('roster', () => {
     });
     const eqItems = await BnetApi.character.getEquipment(realm, name, !force);
     const specializations = await BnetApi.character.getSpec(realm, name, !force);
-    const items = await BnetApi.item.search(eqItems.map((i) => i.item.id));
+    const items = await BnetApi.item.searchByIds(eqItems.map((i) => i.item.id));
     const medias = await BnetApi.media.search(
       'item',
       items.map((i) => i.id),
@@ -66,22 +66,34 @@ export const useRosterStore = defineStore('roster', () => {
     if (cache && !force) return cache;
     const WclChar = await WclApi.getCharLogs(realm, name);
     if (force) {
-      logs.value.map((c) => (c.name === name && c.server.slug === realm ? WclChar : c));
+      logs.value = logs.value.map((c) => (c.name === name && c.server.slug === realm ? WclChar : c));
     } else if (WclChar) {
       logs.value.push(WclChar);
     }
-    return WclChar.zoneRankings;
+    return WclChar?.zoneRankings;
   };
 
   watch(
     () => characters.value,
-    debounce((value) => LocalStorage.set('roster', value), 1000),
+    debounce((value) => {
+      try {
+        LocalStorage.set('roster', value);
+      } catch (err) {
+        console.log(err);
+      }
+    }, 1000),
     { deep: true },
   );
 
   watch(
     () => logs.value,
-    debounce((value) => LocalStorage.set('logs', value), 1000),
+    debounce((value) => {
+      try {
+        LocalStorage.set('logs', value);
+      } catch (err) {
+        console.log(err);
+      }
+    }, 1000),
     { deep: true },
   );
 
