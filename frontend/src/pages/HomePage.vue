@@ -8,6 +8,7 @@
       </q-card-section>
       <q-card-section>
         <q-table
+          fullscreen
           v-if="rosterMembers.length"
           :rows="rosterMembers"
           dense
@@ -88,6 +89,7 @@
         </q-table>
       </q-card-section>
     </q-card>
+    <IlvlGraph />
   </q-page>
 </template>
 
@@ -95,6 +97,7 @@
 import RosterForm from 'components/roster/RosterForm.vue';
 import { type Character, charClasses } from 'src/services';
 import { ref } from 'vue';
+import IlvlGraph from 'components/ilvlGraph.vue';
 
 const rosterName = ref('Nouveau roster');
 const rosterRaidSize = ref(10);

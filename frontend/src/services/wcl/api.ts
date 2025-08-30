@@ -1,6 +1,6 @@
 import axios, { type AxiosStatic, type InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from 'stores/auth';
-import { type WclCharacter } from 'src/services';
+import type { WclCharacter, WclReport } from 'src/services';
 
 const HTTP = axios.create({
   timeout: 60000,
@@ -48,6 +48,28 @@ const api = {
         },
       })
       .then<WclCharacter>((resp) => resp.data.data.characterData.character),
+  getGuildLogs: (realm: string, guild: string) =>
+    cApi
+      .post('', {
+        query:
+          'query getGuildLogs($realm: String, $guild: String, $region: String) { reportData { reports(guildName: $guild, guildServerSlug: $realm, guildServerRegion: $region){total,per_page,current_page,data{code}} } }',
+        variables: {
+          realm: realm.toLowerCase(),
+          guild: guild,
+          region: 'eu',
+        },
+      })
+      .then<WclReport[]>((resp) => resp.data.data?.reportData?.reports.data),
+  getReport: (code: string) =>
+    cApi
+      .post('', {
+        query:
+          'query getReport($code: String) { reportData { report(code: $code) { code,startTime,title,zone{name},owner{name},fights{id,name,encounterID,kill,size,startTime,difficulty},playerDetails(fightIDs: [8,13,17,23]) } } }',
+        variables: {
+          code: code,
+        },
+      })
+      .then<WclReport>((resp) => resp.data.data?.reportData?.report),
 };
 
 export default api;
