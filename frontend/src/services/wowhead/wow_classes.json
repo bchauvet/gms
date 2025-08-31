@@ -3,6 +3,7 @@
     "id": 11,
     "icon": "https://wow.zamimg.com/images/wow/icons/medium/class_druid.jpg",
     "name": "Druid",
+    "color": "#FF7C0A",
     "specializations": [
       {
         "name": "Balance",
@@ -91,6 +92,7 @@
     "id": 3,
     "icon": "https://wow.zamimg.com/images/wow/icons/medium/class_hunter.jpg",
     "name": "Hunter",
+    "color": "#AAD372",
     "specializations": [
       {
         "name": "Beast Mastery",
@@ -174,6 +176,7 @@
     "id": 8,
     "icon": "https://wow.zamimg.com/images/wow/icons/medium/class_mage.jpg",
     "name": "Mage",
+    "color": "#3FC7EB",
     "specializations": [
       {
         "name": "Arcane",
@@ -261,6 +264,7 @@
     "id": 2,
     "icon": "https://wow.zamimg.com/images/wow/icons/medium/class_paladin.jpg",
     "name": "Paladin",
+    "color": "#F48CBA",
     "specializations": [
       {
         "name": "Holy",
@@ -346,6 +350,7 @@
     "id": 5,
     "icon": "https://wow.zamimg.com/images/wow/icons/medium/class_priest.jpg",
     "name": "Priest",
+    "color": "#FFFFFF",
     "specializations": [
       {
         "name": "Discipline",
@@ -434,6 +439,7 @@
     "id": 4,
     "icon": "https://wow.zamimg.com/images/wow/icons/medium/class_rogue.jpg",
     "name": "Rogue",
+    "color": "#FFF468",
     "specializations": [
       {
         "name": "Assassination",
@@ -516,6 +522,7 @@
     "id": 7,
     "icon": "https://wow.zamimg.com/images/wow/icons/medium/class_shaman.jpg",
     "name": "Shaman",
+    "color": "#0070DD",
     "specializations": [
       {
         "name": "Elemental",
@@ -599,6 +606,7 @@
     "id": 9,
     "icon": "https://wow.zamimg.com/images/wow/icons/medium/class_warlock.jpg",
     "name": "Warlock",
+    "color": "#8788EE",
     "specializations": [
       {
         "name": "Affliction",
@@ -680,6 +688,7 @@
     "id": 1,
     "icon": "https://wow.zamimg.com/images/wow/icons/medium/class_warrior.jpg",
     "name": "Warrior",
+    "color": "#C69B6D",
     "specializations": [
       {
         "name": "Arms",
@@ -766,6 +775,7 @@
     "id": 6,
     "icon": "https://wow.zamimg.com/images/wow/icons/medium/class_deathknight.jpg",
     "name": "Death Knight",
+    "color": "#C41E3A",
     "specializations": [
       {
         "name": "Blood",
@@ -851,6 +861,7 @@
     "id": 10,
     "icon": "https://wow.zamimg.com/images/wow/icons/medium/class_monk.jpg",
     "name": "Monk",
+    "color": "#00FF98",
     "specializations": [
       {
         "name": "Brewmaster",
