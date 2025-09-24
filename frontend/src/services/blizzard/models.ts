@@ -88,7 +88,7 @@ export declare interface Character {
   active_spec: {
     id: number;
     name: string;
-  }
+  };
   specializations: Specialization[];
   equipped_items: EquippedItem[];
   average_item_level?: number;
@@ -102,6 +102,7 @@ export declare interface Member {
 
 export declare interface Enchantment {
   enchantment_id: number;
+  display_string: string;
   enchantment_slot: {
     id: number;
     type?: string;
@@ -126,7 +127,7 @@ export declare interface Item {
   level?: number;
   quality?: {
     type: string;
-  }
+  };
   media: {
     id: number;
     assets?: [{ value: string }];
@@ -134,6 +135,7 @@ export declare interface Item {
 }
 
 export declare interface EquippedItem {
+  upgrade_id?: number;
   item: Item;
   name: string;
   media: Media;

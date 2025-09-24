@@ -1,4 +1,5 @@
 <template>
+  <IlvlGraph />
   <q-page class="row items-center justify-evenly">
     <RosterForm :members="rosterMembers" />
     <q-card>
@@ -89,7 +90,6 @@
         </q-table>
       </q-card-section>
     </q-card>
-    <IlvlGraph />
   </q-page>
 </template>
 

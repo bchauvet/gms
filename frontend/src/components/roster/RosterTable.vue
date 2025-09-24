@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getRankColor, rankColors, itemSlots, type Item, itemSlotIcons } from 'src/services';
+import { getRankColor, rankColors, itemSlots, type Item } from 'src/services';
 import { useRosterStore, type Roster, type CharacterWithLogs } from 'stores/roster';
 import { indexOf, sortBy } from 'lodash';
 import { computed } from 'vue';
@@ -175,31 +175,18 @@ const charLogUrl = (char: CharacterWithLogs, size?: number, encounter?: number) 
 //     .join('/');
 // };
 
-// const isBisItem = (item: Item, char: CharacterWithLogs) => {
-//   const _spec = getCharacterSpec(char);
-//   return !!bisList.find((s) => s.spec === _spec.name)?.items.includes(item.id);
-// };
 
-const getiLvLColor = (level: number | undefined) => {
-  if (!level) return 'none';
-  return level >= 502
-    ? rankColors.legendary
-    : level >= 489
-      ? rankColors.astounding
-      : level >= 476
-        ? rankColors.epic
-        : level >= 463
-          ? rankColors.rare
-          : rankColors.uncommon;
-};
-
-// const bisPercent = (char: CharacterWithLogs) => {
-//   const _spec = getCharacterSpec(char).name;
-//   const _bis = bisList.find((s) => s.spec === _spec)?.items || [];
-//   const _equippedItems = char.equipped_items.map((eqItem) => eqItem.item.id);
-//   return Math.round(
-//     (100 * _equippedItems.filter((id) => _bis.includes(id)).length) / _equippedItems.length,
-//   );
+// const getiLvLColor = (level: number | undefined) => {
+//   if (!level) return 'none';
+//   return level >= 502
+//     ? rankColors.legendary
+//     : level >= 489
+//       ? rankColors.astounding
+//       : level >= 476
+//         ? rankColors.epic
+//         : level >= 463
+//           ? rankColors.rare
+//           : rankColors.uncommon;
 // };
 </script>
 
@@ -231,7 +218,7 @@ const getiLvLColor = (level: number | undefined) => {
         name: 'ilvl',
         label: 'iLvL',
         field: (row) =>
-          `${row.equipped_item_level} ${row.average_item_level !== row.equipped_item_level ? '(' + row.average_item_level + ')' : ''}`,
+          `${row.equipped_item_level}${row.average_item_level !== row.equipped_item_level ? '*' : ''}`,
         align: 'center',
         classes: 'text-bold',
         sortable: true,
@@ -248,6 +235,7 @@ const getiLvLColor = (level: number | undefined) => {
         sortable: true,
         align: 'center',
       },
+      ...equipmentColumns,
       ...logColumns,
       // {
       //   name: 'gems',
@@ -261,7 +249,6 @@ const getiLvLColor = (level: number | undefined) => {
       //   sortable: true,
       //   field: (row) => bisPercent(row),
       // },
-      ...equipmentColumns,
     ]"
   >
     <template #top="props">
@@ -295,6 +282,9 @@ const getiLvLColor = (level: number | undefined) => {
     <template v-slot:header="props">
       <q-tr>
         <q-th colspan="4" class="text-center text-bold">Roster</q-th>
+        <q-th :colspan="equipmentColumns.length" class="text-center text-bold">
+          Equipement
+        </q-th>
         <q-th
           v-if="encounterList.length"
           :colspan="encounterList.length + 1"
@@ -302,20 +292,17 @@ const getiLvLColor = (level: number | undefined) => {
         >
           Warcraft Logs (R{{ roster.raid_size }})
         </q-th>
-        <q-th :colspan="equipmentColumns.length + 2" class="text-center text-bold">
-          Equipement
-        </q-th>
       </q-tr>
       <q-tr :props="props">
-        <q-th v-for="col in props.cols" :key="col.name" :props="props">
-          <q-img
-            v-if="col.label && Object.keys(itemSlotIcons).includes(col.label)"
-            :title="col.label"
-            width="3rem"
-            style="opacity: 0.8"
-            :src="itemSlotIcons[col.label as keyof typeof itemSlotIcons]"
-          />
-          <span v-else>{{ col.label }}</span>
+        <q-th v-for="col in props.cols" :key="col.name" :props="props" style="padding: 2px !important">
+          {{
+            col.label
+              .replace('_', '')
+              .replace('FINGER', 'F')
+              .replace('TRINKET', 'T')
+              .replace('SHOULDER', 'SHO.')
+              .replace('HAND', 'H')
+          }}
         </q-th>
       </q-tr>
     </template>
@@ -365,7 +352,7 @@ const getiLvLColor = (level: number | undefined) => {
       v-slot:[`body-cell-${itemSlot}`]="props"
       :key="itemSlot"
     >
-      <q-td :style="'background-color:' + getiLvLColor(props.value?.level)">
+      <q-td style="padding: 0">
         <div class="text-center" v-if="props.value">
           <EquippedItemIcon v-if="props.value" :item="getItemBySlot(props.row.id, itemSlot)!" />
         </div>

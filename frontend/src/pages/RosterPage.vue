@@ -11,7 +11,7 @@ const rosterStore = useRosterStore();
 
 const charNames = ref<string[]>(
   (route.query.char as string)?.split(',') || [
-    'Darkstarky',
+    'Astarky',
     'Azaløl',
     'Charlenriz',
     'Føxdust',
@@ -65,7 +65,7 @@ const displayed_characters = computed<CharacterWithLogs[]>(() => {
       :href="
         '?server=auberdine&char=' +
         [
-          'Darkstarky',
+          'Astarky',
           'Azaløl',
           'Charlenriz',
           'Føxdust',
@@ -106,22 +106,22 @@ const displayed_characters = computed<CharacterWithLogs[]>(() => {
       label="R25"
       class="q-ml-lg"
       :href="
-        '?server=auberdine&char=' +
+        '?server=auberdine&size=25&char=' +
         [
-          'Darkstarky',
-          'Ttpz',
+          'Astarky',
+          'Beadk',
           'Medaladin',
           'Azaløl',
-          'Sneekx',
+          'Lajackett',
 
           'Modimort',
           'Fölïa',
           'Logõsh',
           'Jrmoug',
-          'Ohlly',
+          'Warpampa',
 
-          'Masakek',
-          'Hamsterhunt',
+          'Vokä',
+          'Hunsters',
           'Cärm',
           'Føxdust',
           'Jrmz',
@@ -130,13 +130,13 @@ const displayed_characters = computed<CharacterWithLogs[]>(() => {
           'Alataré',
           'Charlenriz',
           'Touquy',
-          'Vazÿ',
+          'Ttpxy',
 
           'Diwpal',
           'Mandalozå',
           'Gifflesun',
           'Broxîg',
-          'Vokä'
+          'Jokolet'
         ].join(',')
       "
     />

@@ -40,7 +40,7 @@ const api = {
     cApi
       .post('', {
         query:
-          'query getCharacter($name: String, $realm: String, $region: String) { characterData { character(name: $name, serverSlug: $realm, serverRegion: $region){id,name,zoneRankings(size: 10),server{id,name,slug,region{slug}}}}}',
+          'query getCharacter($name: String, $realm: String, $region: String) { characterData { character(name: $name, serverSlug: $realm, serverRegion: $region){id,name,zoneRankings,server{id,name,slug,region{slug}}}}}',
         variables: {
           realm: realm.toLowerCase(),
           name: name,
@@ -60,8 +60,8 @@ const api = {
         },
       })
       .then<WclReport[]>((resp) => resp.data.data?.reportData?.reports.data),
-  getReport: (code: string) =>
-    cApi
+  getReport: (code: string) => {
+    return cApi
       .post('', {
         query:
           'query getReport($code: String) { reportData { report(code: $code) { code,startTime,title,zone{name},owner{name},fights{id,name,encounterID,kill,size,startTime,difficulty},playerDetails(fightIDs: [8,13,17,23]) } } }',
@@ -69,7 +69,8 @@ const api = {
           code: code,
         },
       })
-      .then<WclReport>((resp) => resp.data.data?.reportData?.report),
+      .then<WclReport>((resp) => resp.data.data?.reportData?.report);
+  },
 };
 
 export default api;

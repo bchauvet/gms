@@ -65,4 +65,5 @@ export declare interface WclFightActor {
   icon: string;
   id: number;
   maxItemLevel: number;
+  type: string;
 }
