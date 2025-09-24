@@ -175,7 +175,6 @@ const charLogUrl = (char: CharacterWithLogs, size?: number, encounter?: number) 
 //     .join('/');
 // };
 
-
 // const getiLvLColor = (level: number | undefined) => {
 //   if (!level) return 'none';
 //   return level >= 502
@@ -217,8 +216,7 @@ const charLogUrl = (char: CharacterWithLogs, size?: number, encounter?: number) 
       {
         name: 'ilvl',
         label: 'iLvL',
-        field: (row) =>
-          `${row.equipped_item_level}${row.average_item_level !== row.equipped_item_level ? '*' : ''}`,
+        field: (row) => row.equipped_item_level,
         align: 'center',
         classes: 'text-bold',
         sortable: true,
@@ -282,9 +280,7 @@ const charLogUrl = (char: CharacterWithLogs, size?: number, encounter?: number) 
     <template v-slot:header="props">
       <q-tr>
         <q-th colspan="4" class="text-center text-bold">Roster</q-th>
-        <q-th :colspan="equipmentColumns.length" class="text-center text-bold">
-          Equipement
-        </q-th>
+        <q-th :colspan="equipmentColumns.length" class="text-center text-bold"> Equipement </q-th>
         <q-th
           v-if="encounterList.length"
           :colspan="encounterList.length + 1"
@@ -294,7 +290,12 @@ const charLogUrl = (char: CharacterWithLogs, size?: number, encounter?: number) 
         </q-th>
       </q-tr>
       <q-tr :props="props">
-        <q-th v-for="col in props.cols" :key="col.name" :props="props" style="padding: 2px !important">
+        <q-th
+          v-for="col in props.cols"
+          :key="col.name"
+          :props="props"
+          style="padding: 2px !important"
+        >
           {{
             col.label
               .replace('_', '')

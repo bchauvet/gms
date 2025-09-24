@@ -60,7 +60,7 @@ const profEnchants = [
     <q-img width="2.8rem" :src="'https://wow.zamimg.com/images/wow/icons/large/' + getItemIcon">
       <div
         class="absolute-bottom text-center text-bold"
-        :style="`font-size: 0.9rem; padding: 0; color: rgb(255, ${getItemUpgradeLvl === 2 ? 209 : 50}, 0)`"
+        :style="`font-size: 0.8rem; padding: 0; color: ${getItemUpgradeLvl === 2 ? 'rgb(0,255,0)' : getItemUpgradeLvl === 1 ? 'rgb(255,209,0)' : 'rgb(255,0,0)'}`"
       >
         {{ (equippedItem.item.level || 0) + getItemUpgradeLvl * 4 }}
       </div>
