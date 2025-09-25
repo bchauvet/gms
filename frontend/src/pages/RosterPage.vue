@@ -60,7 +60,7 @@ const displayed_characters = computed<CharacterWithLogs[]>(() => {
   <div class="text-center q-pa-lg">
     <q-btn
       color="secondary"
-      label="Roster MOP"
+      label="Doukack"
       class="q-ml-lg"
       :href="
         '?server=auberdine&char=' +
@@ -73,37 +73,35 @@ const displayed_characters = computed<CharacterWithLogs[]>(() => {
           'Jrmoug',
           'Alataré',
           'Medaladin',
-          'Harkanoss',
-          'Razaquel',
+          'Kogän',
           'Masakek',
           'Broxîg',
-          'Ohlly',
-          'Øhlly'
         ].join(',')
       "
     />
     <q-btn
       color="secondary"
-      label="Roster YQF"
+      label="OokOok"
       class="q-ml-lg"
       :href="
         '?server=auberdine&char=' +
         [
-          'Ttpz',
           'Wazaabtw',
           'Logõsh',
           'Cärm',
           'Modimort',
-          'Sneekx',
+          'Fölïa',
+          'Beadk',
           'Touquy',
           'Mandalozå',
+          'Gifflesun',
           'Jrmz',
         ].join(',')
       "
     />
     <q-btn
       color="secondary"
-      label="R25"
+      label="Roster R25"
       class="q-ml-lg"
       :href="
         '?server=auberdine&size=25&char=' +
@@ -113,32 +111,37 @@ const displayed_characters = computed<CharacterWithLogs[]>(() => {
           'Medaladin',
           'Azaløl',
           'Lajackett',
-
           'Modimort',
           'Fölïa',
           'Logõsh',
           'Jrmoug',
           'Warpampa',
-
-          'Vokä',
+          'Holly',
+          'Rykarya',
+          'Kayjïn',
           'Hunsters',
           'Cärm',
           'Føxdust',
           'Jrmz',
-
+          'Barracüda',
           'Wazaabtw',
           'Alataré',
           'Charlenriz',
           'Touquy',
           'Ttpxy',
-
           'Diwpal',
           'Mandalozå',
           'Gifflesun',
           'Broxîg',
-          'Jokolet'
+          'Jokolet',
         ].join(',')
       "
+    />
+    <q-btn
+      color="secondary"
+      label="Raid +8ilvl"
+      class="q-ml-lg"
+      href="?server=auberdine&size=25&char=Barracüda,Astarky,Beadk,Medaladin,Azaløl,Lajackett,Modimort,Logõsh,Jrmoug,Warpampa,Kayjïn,Hunsters,Cärm,Føxdust,Jrmz,Wazaabtw,Charlenriz,Touquy,Ttpxy,Diwpal,Mandalozå,Gifflesun,Broxîg,Jokolet,Kogän"
     />
   </div>
 </template>

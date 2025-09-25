@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getRankColor, rankColors, itemSlots, type Item } from 'src/services';
+import { getRankColor, rankColors, itemSlots, type Item, type EquippedItem } from 'src/services';
 import { useRosterStore, type Roster, type CharacterWithLogs } from 'stores/roster';
 import { indexOf, sortBy } from 'lodash';
 import { computed } from 'vue';
@@ -197,7 +197,7 @@ const charLogUrl = (char: CharacterWithLogs, size?: number, encounter?: number) 
     :rows="roster.characters"
     row-key="id"
     :rows-per-page-options="[25, 50]"
-    :pagination="{ rowsPerPage: 25 }"
+    :pagination="{ rowsPerPage: 50 }"
     :columns="[
       {
         name: 'action',
@@ -232,6 +232,16 @@ const charLogUrl = (char: CharacterWithLogs, size?: number, encounter?: number) 
         field: 'name',
         sortable: true,
         align: 'center',
+      },
+      {
+        name: 'upgrade',
+        label: 'Upg.',
+        field: (row) =>
+          row.equipped_items
+            .map((eq: EquippedItem) => (eq.upgrade_id === 447 ? 2 : eq.upgrade_id === 446 ? 1 : 0))
+            .reduce((acc: number, cur: number) => acc + cur) / 2,
+        align: 'center',
+        sortable: true,
       },
       ...equipmentColumns,
       ...logColumns,
@@ -280,7 +290,9 @@ const charLogUrl = (char: CharacterWithLogs, size?: number, encounter?: number) 
     <template v-slot:header="props">
       <q-tr>
         <q-th colspan="4" class="text-center text-bold">Roster</q-th>
-        <q-th :colspan="equipmentColumns.length" class="text-center text-bold"> Equipement </q-th>
+        <q-th :colspan="equipmentColumns.length + 1" class="text-center text-bold">
+          Equipement
+        </q-th>
         <q-th
           v-if="encounterList.length"
           :colspan="encounterList.length + 1"
@@ -306,6 +318,15 @@ const charLogUrl = (char: CharacterWithLogs, size?: number, encounter?: number) 
           }}
         </q-th>
       </q-tr>
+    </template>
+    <template v-slot:body-cell-upgrade="props">
+      <q-td class="text-center">
+        {{ props.value }}/{{
+          props.row.equipped_items.filter(
+            (item: EquippedItem) => !['SHIRT', 'TABARD'].includes(item.slot.type),
+          ).length
+        }}
+      </q-td>
     </template>
     <template v-slot:body-cell-action="props">
       <q-td>
