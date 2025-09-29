@@ -60,6 +60,19 @@ const displayed_characters = computed<CharacterWithLogs[]>(() => {
   <div class="text-center q-pa-lg">
     <q-btn
       color="secondary"
+      label="Meda"
+      class="q-ml-lg"
+      :href="
+        '?server=auberdine&char=' +
+        [
+          'Medaladin',
+          'Méda',
+          'Medamonk'
+        ].join(',')
+      "
+    />
+    <q-btn
+      color="secondary"
       label="Doukack"
       class="q-ml-lg"
       :href="
@@ -123,6 +136,7 @@ const displayed_characters = computed<CharacterWithLogs[]>(() => {
           'Cärm',
           'Føxdust',
           'Jrmz',
+          'Jackiï',
           'Barracüda',
           'Wazaabtw',
           'Alataré',
@@ -141,7 +155,7 @@ const displayed_characters = computed<CharacterWithLogs[]>(() => {
       color="secondary"
       label="Raid +8ilvl"
       class="q-ml-lg"
-      href="?server=auberdine&size=25&char=Barracüda,Astarky,Beadk,Medaladin,Azaløl,Lajackett,Modimort,Logõsh,Jrmoug,Warpampa,Kayjïn,Hunsters,Cärm,Føxdust,Jrmz,Wazaabtw,Charlenriz,Touquy,Ttpxy,Diwpal,Mandalozå,Gifflesun,Broxîg,Jokolet,Kogän"
+      href="?server=auberdine&size=25&char=Barracüda,Astarky,Beadk,Medaladin,Azaløl,Lajackett,Modimort,Logõsh,Jrmoug,Warpampa,Kayjïn,Hunsters,Phobiesdr,Føxdust,Jrmz,Wazaabtw,Charlenriz,Touquy,Ttpxy,Diwpal,Mandalozå,Gifflesun,Broxîg,Jokolet,Kogän"
     />
   </div>
 </template>

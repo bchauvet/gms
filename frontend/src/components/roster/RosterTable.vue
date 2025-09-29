@@ -323,7 +323,9 @@ const charLogUrl = (char: CharacterWithLogs, size?: number, encounter?: number) 
       <q-td class="text-center">
         {{ props.value }}/{{
           props.row.equipped_items.filter(
-            (item: EquippedItem) => !['SHIRT', 'TABARD'].includes(item.slot.type),
+            (eq: EquippedItem) =>
+              !['SHIRT', 'TABARD'].includes(eq.slot.type) &&
+              !eq.item.name?.en_GB.includes('Gladiator'),
           ).length
         }}
       </q-td>

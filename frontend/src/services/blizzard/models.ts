@@ -123,7 +123,10 @@ export declare interface Stat {
 
 export declare interface Item {
   id: number;
-  name?: string;
+  name?: {
+    en_GB: string;
+    fr_FR: string;
+  }
   level?: number;
   quality?: {
     type: string;
